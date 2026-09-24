@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useId, useRef, Suspense } from "react";
+import { useState, useCallback, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -32,30 +32,6 @@ function displayName(user) {
   if (!user) return null;
   const meta = user.user_metadata ?? {};
   return meta.full_name ?? meta.name ?? user.email ?? "Usuario";
-}
-
-/**
- * Initials from full name: "Diego Murillo" → "DM"
- * @param {string | null | undefined} name
- * @returns {string}
- */
-function getInitials(name) {
-  if (!name) return "?";
-  const trimmed = name.trim();
-  if (!trimmed) return "?";
-
-  // Prefer name part before email domain if the display value is an email
-  const base = trimmed.includes("@") ? trimmed.split("@")[0] : trimmed;
-  const parts = base.split(/\s+/).filter(Boolean);
-
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
-
-  const first = parts[0][0] ?? "";
-  const last = parts[parts.length - 1][0] ?? "";
-  return `${first}${last}`.toUpperCase();
 }
 
 function UserDisplay() {
@@ -226,94 +202,76 @@ function SignOutButton() {
   );
 }
 
+const homeShellActionClassName =
+  "inline-flex h-10 items-center gap-2 rounded-xl border border-zinc-200/80 bg-white/80 px-3 text-sm font-medium text-zinc-600 shadow-sm backdrop-blur-sm transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-950";
+
+function AdminIcon() {
+  return (
+    <svg
+      className="h-4 w-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+      />
+    </svg>
+  );
+}
+
+function SignOutIcon() {
+  return (
+    <svg
+      className="h-4 w-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+      />
+    </svg>
+  );
+}
+
 function HomeUserMenu() {
-  const user = useUser();
   const router = useRouter();
-  const menuId = useId();
-  const containerRef = useRef(null);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const name = displayName(user);
-  const initials = getInitials(name);
-
-  const handleClose = useCallback(() => setIsOpen(false), []);
-
-  const handleToggle = () => {
-    setIsOpen((prev) => !prev);
-  };
 
   const handleSignOut = useCallback(async () => {
-    setIsOpen(false);
     const supabase = createClient();
     await supabase.auth.signOut();
     router.refresh();
     router.push("/login");
   }, [router]);
 
-  useEffect(() => {
-    if (!isOpen) return undefined;
-
-    const handlePointerDown = (event) => {
-      if (!containerRef.current?.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen]);
-
   return (
-    <div ref={containerRef} className="relative">
+    <div className="flex flex-wrap items-center justify-end gap-2">
+      <Link
+        href="/payments"
+        className={homeShellActionClassName}
+        aria-label="Ir a administración"
+      >
+        <AdminIcon />
+        Administración
+      </Link>
       <button
         type="button"
-        onClick={handleToggle}
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-600 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:focus:ring-offset-zinc-950"
-        aria-label={name ? `Menú de usuario: ${name}` : "Menú de usuario"}
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-controls={menuId}
+        onClick={handleSignOut}
+        className={homeShellActionClassName}
+        aria-label="Cerrar sesión"
       >
-        <span aria-hidden>{initials}</span>
+        <SignOutIcon />
+        Cerrar sesión
       </button>
-
-      {isOpen ? (
-        <div
-          id={menuId}
-          role="menu"
-          aria-label="Opciones de usuario"
-          className="absolute right-0 top-full z-20 mt-2 w-48 overflow-hidden rounded-xl border border-zinc-200/80 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900"
-        >
-          <Link
-            href="/payments"
-            role="menuitem"
-            tabIndex={0}
-            onClick={handleClose}
-            className="block px-4 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500/50 dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:bg-zinc-800"
-          >
-            Administración
-          </Link>
-          <button
-            type="button"
-            role="menuitem"
-            tabIndex={0}
-            onClick={handleSignOut}
-            className="block w-full px-4 py-2.5 text-left text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500/50 dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:bg-zinc-800"
-          >
-            Cerrar sesión
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 }
