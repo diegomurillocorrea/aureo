@@ -35,6 +35,42 @@ const ALLOWED_PROOF_TYPES = [
 ];
 const MAX_PROOF_BYTES = 5 * 1024 * 1024;
 
+/**
+ * Commission by total_amount (mirrors server computeCommission).
+ * @param {number} totalAmount
+ * @returns {number}
+ */
+function computeCommission(totalAmount) {
+  const n = Number(totalAmount);
+  if (Number.isNaN(n) || n < 0) return 0;
+  if (n === 0) return 0;
+  if (n === 0.5) return 0.25;
+  if (n === 1) return 0.5;
+  if (n < 50) return 1;
+  return Math.floor(n / 50) + 1;
+}
+
+/**
+ * @param {string} value
+ * @returns {number}
+ */
+function parseCommissionValue(value) {
+  if (value.trim() === "") return 0;
+  const n = Number(value);
+  return Number.isNaN(n) ? 0 : n;
+}
+
+/**
+ * Always show commission with two decimal places.
+ * @param {number | string} value
+ * @returns {string}
+ */
+function formatCommissionDecimals(value) {
+  const n = typeof value === "number" ? value : parseCommissionValue(String(value ?? ""));
+  if (Number.isNaN(n) || n < 0) return "0.00";
+  return n.toFixed(2);
+}
+
 function getServiceImageUrl(service) {
   if (!service?.image_bucket || !service?.image_path) return null;
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -124,6 +160,7 @@ export function PaymentEditView({
   const isMobile = useIsMobile();
   const amountId = useId();
   const commissionId = useId();
+  const commissionSwitchId = useId();
   const methodId = useId();
   const proofId = useId();
   const dateId = useId();
@@ -134,11 +171,23 @@ export function PaymentEditView({
   const canManageProof =
     isPermissionsLoading || can("payments", "manage_proof");
 
+  const initialCommission = Number(payment?.commission);
+  const hasInitialCommission =
+    payment?.commission != null &&
+    !Number.isNaN(initialCommission) &&
+    initialCommission > 0;
+
   const [amount, setAmount] = useState(() =>
     payment?.total_amount != null ? String(payment.total_amount) : ""
   );
   const [commission, setCommission] = useState(() =>
-    payment?.commission != null ? String(payment.commission) : "0"
+    formatCommissionDecimals(hasInitialCommission ? initialCommission : 0)
+  );
+  const [isCommissionEnabled, setIsCommissionEnabled] = useState(
+    () => hasInitialCommission
+  );
+  const [isCommissionManual, setIsCommissionManual] = useState(
+    () => hasInitialCommission
   );
   const [paymentMethodId, setPaymentMethodId] = useState(
     () => payment?.payment_method_id ?? ""
@@ -173,15 +222,70 @@ export function PaymentEditView({
 
   const isBusy = isSubmitting || isSuccess || isProofBusy;
   const canInteract = canEdit && !isBusy;
+  const canEditCommission = isCommissionEnabled && canInteract;
 
   const handleAmountChange = (event) => {
-    setAmount(event.target.value);
+    const nextAmount = event.target.value;
+    setAmount(nextAmount);
     setFormError(null);
+
+    if (!isCommissionEnabled) {
+      setCommission(formatCommissionDecimals(0));
+      return;
+    }
+
+    if (nextAmount.trim() === "") {
+      setCommission(formatCommissionDecimals(0));
+      setIsCommissionManual(false);
+      return;
+    }
+
+    const computed = computeCommission(Number(nextAmount));
+
+    if (!isCommissionManual) {
+      setCommission(formatCommissionDecimals(computed));
+      return;
+    }
+
+    const current = parseCommissionValue(commission);
+    if (computed > current) setCommission(formatCommissionDecimals(computed));
   };
 
   const handleCommissionChange = (event) => {
     setCommission(event.target.value);
+    setIsCommissionManual(true);
     setFormError(null);
+  };
+
+  const handleCommissionBlur = () => {
+    if (!isCommissionEnabled) {
+      setCommission(formatCommissionDecimals(0));
+      return;
+    }
+    setCommission(formatCommissionDecimals(commission));
+  };
+
+  const handleCommissionSwitchToggle = () => {
+    if (!canInteract) return;
+
+    const nextEnabled = !isCommissionEnabled;
+    setIsCommissionEnabled(nextEnabled);
+    setFormError(null);
+
+    if (!nextEnabled) {
+      setCommission(formatCommissionDecimals(0));
+      setIsCommissionManual(false);
+      return;
+    }
+
+    if (amount.trim() === "") {
+      setCommission(formatCommissionDecimals(0));
+      setIsCommissionManual(false);
+      return;
+    }
+
+    setCommission(formatCommissionDecimals(computeCommission(Number(amount))));
+    setIsCommissionManual(false);
   };
 
   const handleMethodChange = (event) => {
@@ -286,7 +390,10 @@ export function PaymentEditView({
 
     const parsedCommission =
       commission.trim() === "" ? NaN : Number(commission);
-    if (Number.isNaN(parsedCommission) || parsedCommission < 0) {
+    if (
+      isCommissionEnabled &&
+      (Number.isNaN(parsedCommission) || parsedCommission < 0)
+    ) {
       setFormError("La comisión debe ser cero o mayor.");
       return;
     }
@@ -312,8 +419,8 @@ export function PaymentEditView({
       payment_method_id: paymentMethodId,
       status,
       created_at: createdAtIso,
-      add_commission: true,
-      custom_commission: parsedCommission,
+      add_commission: isCommissionEnabled,
+      custom_commission: isCommissionEnabled ? parsedCommission : null,
     });
 
     if (updateResult.error) {
@@ -445,25 +552,47 @@ export function PaymentEditView({
               />
             </div>
             <div>
-              <label
-                htmlFor={commissionId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-              >
-                Comisión
-              </label>
+              <div className="mb-1.5 flex items-center justify-between gap-2">
+                <label
+                  htmlFor={commissionId}
+                  className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                >
+                  Comisión
+                </label>
+                <button
+                  id={commissionSwitchId}
+                  type="button"
+                  role="switch"
+                  aria-checked={isCommissionEnabled}
+                  aria-label="Activar o desactivar comisión"
+                  onClick={handleCommissionSwitchToggle}
+                  disabled={!canInteract}
+                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-950 ${
+                    isCommissionEnabled
+                      ? "bg-emerald-600"
+                      : "bg-zinc-300 dark:bg-zinc-600"
+                  }`}
+                >
+                  <span
+                    aria-hidden
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                      isCommissionEnabled ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+              </div>
               <input
                 id={commissionId}
-                type="number"
+                type="text"
                 inputMode="decimal"
-                min="0"
-                step="0.01"
                 value={commission}
                 onChange={handleCommissionChange}
+                onBlur={handleCommissionBlur}
                 placeholder="0.00"
-                required
-                disabled={!canInteract}
+                disabled={!canEditCommission}
                 className={inputClassName}
                 aria-label="Comisión"
+                aria-describedby={commissionSwitchId}
               />
             </div>
           </div>
