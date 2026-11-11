@@ -24,6 +24,7 @@ import {
   tableViewSectionTitleClass,
 } from "@/lib/table-scroll-shell";
 import { buildPaymentConfirmationUrl } from "@/lib/whatsapp/payment-confirmation-link";
+import { PaymentEditView } from "../[serviceId]/[billId]/payment-edit-view";
 import { deletePaymentAction, markPaymentWhatsAppSent } from "./actions";
 import {
   PAYMENT_STATUS_REGISTERED,
@@ -78,12 +79,19 @@ function getPaymentAccountNumber(payment) {
   return (receipt?.account_receipt_number ?? "").trim();
 }
 
-function getPaymentServiceId(payment) {
-  const receipt = normalizeReceiptRef(payment.receipt ?? payment.receipts);
+function getPaymentReceipt(payment) {
+  return normalizeReceiptRef(payment?.receipt ?? payment?.receipts);
+}
+
+function getPaymentService(payment) {
+  const receipt = getPaymentReceipt(payment);
   if (!receipt) return null;
   const service = receipt.services ?? receipt.service;
-  const svc = Array.isArray(service) ? service[0] : service;
-  return svc?.id ?? null;
+  return Array.isArray(service) ? service[0] ?? null : service;
+}
+
+function getPaymentServiceId(payment) {
+  return getPaymentService(payment)?.id ?? null;
 }
 
 function getPaymentServiceName(payment) {
@@ -214,6 +222,13 @@ const PERIOD_OPTIONS = [
 const filterControlClass =
   "w-full min-w-40 rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
 
+const PERIOD_QUERY_VALUES = new Set([
+  "semanal",
+  "mensual",
+  "anual",
+  "personalizado",
+]);
+
 /** Query format: DDMMYYYY (e.g. 01082026 → 1 Aug 2026), El Salvador calendar day */
 function formatDateQueryParam(date) {
   const { year, month, day } = getElSalvadorParts(date);
@@ -234,9 +249,109 @@ function parseDateQueryParam(value) {
   );
 }
 
-function resolveSelectedDateValue(dateParam) {
-  const fromUrl = parseDateQueryParam(dateParam);
-  return toDateInputValueEsSv(fromUrl ?? new Date());
+function normalizePeriodParam(value) {
+  if (!value || value === "diario") return "diario";
+  if (PERIOD_QUERY_VALUES.has(value)) return value;
+  return "diario";
+}
+
+function yyyyMmDdToQueryParam(yyyyMmDd) {
+  const date = parseDateInputEsSv(yyyyMmDd);
+  if (!date) return null;
+  return formatDateQueryParam(date);
+}
+
+function periodFilterSignature(params) {
+  return [
+    params.get("period") ?? "",
+    params.get("date") ?? "",
+    params.get("from") ?? "",
+    params.get("to") ?? "",
+  ].join("|");
+}
+
+function arePeriodFilterParamsEqual(a, b) {
+  return periodFilterSignature(a) === periodFilterSignature(b);
+}
+
+/**
+ * Canonical filter state from the URL.
+ * @param {{ get: (key: string) => string | null }} searchParams
+ */
+function resolveFilterStateFromSearchParams(searchParams) {
+  const period = normalizePeriodParam(searchParams.get("period"));
+  const todayValue = toDateInputValueEsSv(new Date());
+  const dateFromUrl = parseDateQueryParam(searchParams.get("date"));
+  const fallbackDateValue = dateFromUrl
+    ? toDateInputValueEsSv(dateFromUrl)
+    : todayValue;
+
+  if (period === "personalizado") {
+    let fromDate = parseDateQueryParam(searchParams.get("from"));
+    let toDate = parseDateQueryParam(searchParams.get("to"));
+    if (!fromDate) fromDate = parseDateInputEsSv(fallbackDateValue);
+    if (!toDate) toDate = parseDateInputEsSv(fallbackDateValue);
+    if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
+      const swapped = fromDate;
+      fromDate = toDate;
+      toDate = swapped;
+    }
+    return {
+      period: "personalizado",
+      selectedDate: fallbackDateValue,
+      customFrom: toDateInputValueEsSv(fromDate),
+      customTo: toDateInputValueEsSv(toDate),
+    };
+  }
+
+  return {
+    period,
+    selectedDate: fallbackDateValue,
+    customFrom: fallbackDateValue,
+    customTo: fallbackDateValue,
+  };
+}
+
+/**
+ * Build query params for the given filter state. Preserves unrelated keys.
+ * @param {{ toString: () => string }} currentSearchParams
+ * @param {{ period: string; selectedDate: string; customFrom: string; customTo: string }} filterState
+ */
+function buildPeriodFilterSearchParams(currentSearchParams, filterState) {
+  const params = new URLSearchParams(currentSearchParams.toString());
+  params.delete("period");
+  params.delete("from");
+  params.delete("to");
+  params.delete("date");
+  params.delete("editPayment");
+
+  const { period, selectedDate, customFrom, customTo } = filterState;
+
+  if (period === "personalizado") {
+    params.set("period", "personalizado");
+    const todayParam = formatDateQueryParam(new Date());
+    let fromParam = yyyyMmDdToQueryParam(customFrom) ?? todayParam;
+    let toParam = yyyyMmDdToQueryParam(customTo) ?? fromParam;
+    const fromDate = parseDateQueryParam(fromParam);
+    const toDate = parseDateQueryParam(toParam);
+    if (fromDate && toDate && fromDate.getTime() > toDate.getTime()) {
+      const swapped = fromParam;
+      fromParam = toParam;
+      toParam = swapped;
+    }
+    params.set("from", fromParam);
+    params.set("to", toParam);
+    return params;
+  }
+
+  if (period !== "diario") {
+    params.set("period", period);
+  }
+  params.set(
+    "date",
+    yyyyMmDdToQueryParam(selectedDate) ?? formatDateQueryParam(new Date())
+  );
+  return params;
 }
 
 function getPeriodRange(period, selectedDateValue, customFrom, customTo) {
@@ -492,25 +607,27 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
   const searchParams = useSearchParams();
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
-  const dateParam = searchParams.get("date");
 
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
+  const [editTarget, setEditTarget] = useState(null);
   const [copyFeedback, setCopyFeedback] = useState(null);
   const [whatsAppFeedback, setWhatsAppFeedback] = useState(null);
   const [sendingWhatsAppPaymentIds, setSendingWhatsAppPaymentIds] = useState(
     () => new Set()
   );
-  const [period, setPeriod] = useState("diario");
-  const [selectedDate, setSelectedDate] = useState(() =>
-    resolveSelectedDateValue(dateParam)
+  const [period, setPeriod] = useState(
+    () => resolveFilterStateFromSearchParams(searchParams).period
   );
-  const [customFrom, setCustomFrom] = useState(() =>
-    resolveSelectedDateValue(dateParam)
+  const [selectedDate, setSelectedDate] = useState(
+    () => resolveFilterStateFromSearchParams(searchParams).selectedDate
   );
-  const [customTo, setCustomTo] = useState(() =>
-    resolveSelectedDateValue(dateParam)
+  const [customFrom, setCustomFrom] = useState(
+    () => resolveFilterStateFromSearchParams(searchParams).customFrom
+  );
+  const [customTo, setCustomTo] = useState(
+    () => resolveFilterStateFromSearchParams(searchParams).customTo
   );
   const [searchQuery, setSearchQuery] = useState("");
   const sendingWhatsAppPaymentIdsRef = useRef(new Set());
@@ -550,57 +667,110 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
   const periodLabel =
     PERIOD_OPTIONS.find((option) => option.value === period)?.label ?? "Período";
 
-  const updateDateInUrl = useCallback(
-    (yyyyMmDd) => {
-      const date = parseDateInputEsSv(yyyyMmDd);
-      if (!date) return;
-      const nextParam = formatDateQueryParam(date);
-      if (searchParams.get("date") === nextParam) return;
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("date", nextParam);
-      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  const writeFiltersToUrl = useCallback(
+    (nextFilterState) => {
+      const nextParams = buildPeriodFilterSearchParams(
+        searchParams,
+        nextFilterState
+      );
+      if (arePeriodFilterParamsEqual(searchParams, nextParams)) return;
+      router.replace(`${pathname}?${nextParams.toString()}`, { scroll: false });
     },
     [pathname, router, searchParams]
   );
 
   useEffect(() => {
-    const next = resolveSelectedDateValue(dateParam);
-    setSelectedDate((current) => (current === next ? current : next));
-  }, [dateParam]);
+    const resolved = resolveFilterStateFromSearchParams(searchParams);
+    setPeriod((current) =>
+      current === resolved.period ? current : resolved.period
+    );
+    if (resolved.period !== "personalizado") {
+      setSelectedDate((current) =>
+        current === resolved.selectedDate ? current : resolved.selectedDate
+      );
+    }
+    setCustomFrom((current) =>
+      current === resolved.customFrom ? current : resolved.customFrom
+    );
+    setCustomTo((current) =>
+      current === resolved.customTo ? current : resolved.customTo
+    );
 
-  useEffect(() => {
-    if (parseDateQueryParam(dateParam)) return;
-    updateDateInUrl(selectedDate);
-  }, [dateParam, selectedDate, updateDateInUrl]);
+    const nextParams = buildPeriodFilterSearchParams(searchParams, resolved);
+    if (arePeriodFilterParamsEqual(searchParams, nextParams)) return;
+    router.replace(`${pathname}?${nextParams.toString()}`, { scroll: false });
+  }, [pathname, router, searchParams]);
 
   const handlePeriodChange = useCallback(
     (event) => {
       const nextPeriod = event.target.value;
-      setPeriod(nextPeriod);
       if (nextPeriod === "personalizado") {
-        setCustomFrom(selectedDate);
-        setCustomTo(selectedDate);
+        const next = {
+          period: "personalizado",
+          selectedDate,
+          customFrom: selectedDate,
+          customTo: selectedDate,
+        };
+        setPeriod(next.period);
+        setCustomFrom(next.customFrom);
+        setCustomTo(next.customTo);
+        writeFiltersToUrl(next);
+        return;
       }
+
+      const next = {
+        period: nextPeriod,
+        selectedDate,
+        customFrom,
+        customTo,
+      };
+      setPeriod(nextPeriod);
+      writeFiltersToUrl(next);
     },
-    [selectedDate]
+    [customFrom, customTo, selectedDate, writeFiltersToUrl]
   );
 
   const handleSelectedDateChange = useCallback(
     (event) => {
       const value = event.target.value;
       setSelectedDate(value);
-      updateDateInUrl(value);
+      writeFiltersToUrl({
+        period,
+        selectedDate: value,
+        customFrom,
+        customTo,
+      });
     },
-    [updateDateInUrl]
+    [customFrom, customTo, period, writeFiltersToUrl]
   );
 
-  const handleCustomFromChange = useCallback((event) => {
-    setCustomFrom(event.target.value);
-  }, []);
+  const handleCustomFromChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      setCustomFrom(value);
+      writeFiltersToUrl({
+        period,
+        selectedDate,
+        customFrom: value,
+        customTo,
+      });
+    },
+    [customTo, period, selectedDate, writeFiltersToUrl]
+  );
 
-  const handleCustomToChange = useCallback((event) => {
-    setCustomTo(event.target.value);
-  }, []);
+  const handleCustomToChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      setCustomTo(value);
+      writeFiltersToUrl({
+        period,
+        selectedDate,
+        customFrom,
+        customTo: value,
+      });
+    },
+    [customFrom, period, selectedDate, writeFiltersToUrl]
+  );
 
   const handleSearchChange = useCallback((event) => {
     setSearchQuery(event.target.value);
@@ -615,17 +785,39 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
     return () => clearTimeout(timer);
   }, [copyFeedback, whatsAppFeedback]);
 
-  const handleEditPayment = useCallback(
-    (payment) => {
-      const serviceId = getPaymentServiceId(payment);
-      const account = getPaymentAccountNumber(payment);
-      if (!serviceId || !account || !payment?.id) return;
-      router.push(
-        `/${serviceId}/${encodeURIComponent(account)}?paymentId=${payment.id}`
-      );
-    },
-    [router]
-  );
+  const handleEditPayment = useCallback((payment) => {
+    if (!payment?.id) return;
+    const receipt = getPaymentReceipt(payment);
+    const service = getPaymentService(payment);
+    if (!receipt?.id || !service?.id) return;
+    setEditTarget(payment);
+  }, []);
+
+  const handleCloseEditPayment = useCallback(() => {
+    setEditTarget(null);
+  }, []);
+
+  const handleSavedEditPayment = useCallback(() => {
+    setEditTarget(null);
+    router.refresh();
+  }, [router]);
+
+  useEffect(() => {
+    const editPaymentId = (searchParams.get("editPayment") ?? "").trim();
+    if (!editPaymentId) return;
+
+    const payment = allPayments.find((item) => item?.id === editPaymentId);
+    if (payment) {
+      const receipt = getPaymentReceipt(payment);
+      const service = getPaymentService(payment);
+      if (receipt?.id && service?.id) setEditTarget(payment);
+    }
+
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.delete("editPayment");
+    const query = nextParams.toString();
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  }, [allPayments, pathname, router, searchParams]);
 
   const handleDeleteClick = useCallback((payment) => {
     setDeleteTarget(payment);
@@ -744,6 +936,18 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
     onSendWhatsAppConfirmation: handleSendWhatsAppConfirmation,
     sendingWhatsAppPaymentIds,
   };
+
+  const editReceipt = editTarget ? getPaymentReceipt(editTarget) : null;
+  const editService = editTarget ? getPaymentService(editTarget) : null;
+  const canShowEditModal = Boolean(
+    editTarget?.id && editReceipt?.id && editService?.id
+  );
+  const changeClientReturnTo = (() => {
+    if (!canShowEditModal) return null;
+    const returnParams = new URLSearchParams(searchParams.toString());
+    returnParams.set("editPayment", editTarget.id);
+    return `/payments?${returnParams.toString()}`;
+  })();
 
   return (
     <div className={tableViewRootClass}>
@@ -959,16 +1163,24 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           </div>
         ) : isMobile ? (
           <ul className={tableMobileListClass}>
-            {filteredPayments.map((payment) => (
+            {filteredPayments.map((payment, index) => (
               <li
                 key={payment.id}
                 className="space-y-4 px-5 py-5 transition-colors hover:bg-emerald-50/40 dark:hover:bg-emerald-950/10"
               >
-                <ServicioCell
-                  payment={payment}
-                  onCopied={handleCopied}
-                  onCopyError={handleCopyError}
-                />
+                <div className="flex flex-col gap-0.5">
+                  <span
+                    className="text-xs font-medium text-zinc-500 dark:text-zinc-400"
+                    aria-hidden
+                  >
+                    {index + 1}.
+                  </span>
+                  <ServicioCell
+                    payment={payment}
+                    onCopied={handleCopied}
+                    onCopyError={handleCopyError}
+                  />
+                </div>
                 <div className="flex flex-col gap-3 text-sm leading-relaxed">
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
                     <span className="font-medium text-zinc-900 dark:text-zinc-50">
@@ -996,7 +1208,8 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           <div className={tableScrollBodyClass}>
             <table className="w-full table-fixed text-sm" role="grid">
               <colgroup>
-                <col className="w-[34%]" />
+                <col className="w-12" />
+                <col className="w-[28%]" />
                 <col className="w-[11%]" />
                 <col className="w-[11%]" />
                 <col className="w-[12%]" />
@@ -1005,6 +1218,12 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
               </colgroup>
               <thead className={tableHeadClass}>
                 <tr className="border-b border-zinc-200/80 dark:border-zinc-800">
+                  <th
+                    className={`${tableHeadCellClass} w-12 px-2 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-4 tablet:py-4.5`}
+                    scope="col"
+                  >
+                    #
+                  </th>
                   <th
                     className={`${tableHeadCellClass} px-4 py-4 text-left font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
                     scope="col"
@@ -1044,11 +1263,17 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                 </tr>
               </thead>
               <tbody>
-                {filteredPayments.map((payment) => (
+                {filteredPayments.map((payment, index) => (
                   <tr
                     key={payment.id}
                     className="border-b border-zinc-100 last:border-0 transition-colors hover:bg-emerald-50/40 dark:border-zinc-800 dark:hover:bg-emerald-950/10"
                   >
+                    <td
+                      className="w-12 px-2 py-4 text-center tabular-nums text-zinc-500 dark:text-zinc-400 tablet:px-4 tablet:py-4.5"
+                      aria-label={`Fila ${index + 1}`}
+                    >
+                      {index + 1}
+                    </td>
                     <td className="min-w-0 px-4 py-4 text-left tablet:px-5 tablet:py-4.5">
                       <ServicioCell
                         payment={payment}
@@ -1117,6 +1342,20 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           </div>
         </div>
       )}
+
+      {canShowEditModal ? (
+        <PaymentEditView
+          key={editTarget.id}
+          payment={editTarget}
+          receipt={editReceipt}
+          service={editService}
+          paymentMethods={initialPaymentMethods ?? []}
+          layout="modal"
+          onClose={handleCloseEditPayment}
+          onSaved={handleSavedEditPayment}
+          changeClientReturnTo={changeClientReturnTo}
+        />
+      ) : null}
 
       {deleteTarget && (
         <div

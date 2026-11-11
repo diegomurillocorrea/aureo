@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
+import { resolveSafePaymentsReturnTo } from "@/lib/safe-payments-return-to";
 
 function BackChevron() {
   return (
@@ -46,7 +47,9 @@ export function HomeShellBackLink() {
 
   if (segments.length === 2) {
     const serviceId = segments[0];
-    const href = paymentId ? "/payments" : `/${serviceId}`;
+    const href = paymentId
+      ? resolveSafePaymentsReturnTo(searchParams.get("returnTo"))
+      : `/${serviceId}`;
     const ariaLabel = paymentId ? "Volver a pagos" : "Volver a búsqueda";
 
     return (

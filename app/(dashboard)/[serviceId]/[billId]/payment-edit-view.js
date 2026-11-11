@@ -1,15 +1,16 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Check, Copy, Eye, FileX, Pencil, Upload } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Check, Copy, Eye, FileX, Pencil, Upload, X } from "lucide-react";
 import { DaiegoLogo } from "@/components/daiego-logo";
 import { ServiceLogoLink } from "@/components/service-logo-link";
 import {
   dateInputToIsoWithCurrentTimeEsSv,
   toDateInputValueEsSv,
 } from "@/lib/datetime";
+import { resolveSafePaymentsReturnTo } from "@/lib/safe-payments-return-to";
 import {
   updatePaymentAction,
   uploadPaymentProofAction,
@@ -154,10 +155,16 @@ export function PaymentEditView({
   receipt,
   service,
   paymentMethods,
+  layout = "page",
+  onClose = null,
+  onSaved = null,
+  changeClientReturnTo = null,
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { can, isLoading: isPermissionsLoading } = usePermissions();
   const isMobile = useIsMobile();
+  const isModal = layout === "modal";
   const amountId = useId();
   const commissionId = useId();
   const commissionSwitchId = useId();
@@ -165,6 +172,7 @@ export function PaymentEditView({
   const proofId = useId();
   const dateId = useId();
   const statusId = useId();
+  const titleId = useId();
   const proofInputRef = useRef(null);
 
   const canEdit = isPermissionsLoading || can("payments", "edit");
@@ -215,14 +223,41 @@ export function PaymentEditView({
   const serviceImageUrl = getServiceImageUrl(service);
   const clientLabel = getClientDisplayName(receipt?.clients);
   const accountNumber = (receipt?.account_receipt_number ?? "").trim();
-  const changeClientHref =
-    serviceId && payment?.id
-      ? `/${serviceId}?paymentId=${encodeURIComponent(payment.id)}`
-      : null;
+  const changeClientHref = (() => {
+    if (!serviceId || !payment?.id) return null;
+    const base = `/${serviceId}?paymentId=${encodeURIComponent(payment.id)}`;
+    if (!changeClientReturnTo) return base;
+    return `${base}&returnTo=${encodeURIComponent(changeClientReturnTo)}`;
+  })();
 
   const isBusy = isSubmitting || isSuccess || isProofBusy;
   const canInteract = canEdit && !isBusy;
   const canEditCommission = isCommissionEnabled && canInteract;
+  const canDismissModal =
+    isModal &&
+    typeof onClose === "function" &&
+    !isSubmitting &&
+    !isProofBusy;
+
+  useEffect(() => {
+    if (!isModal || typeof onClose !== "function") return;
+
+    const handleKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      if (isProofPreviewOpen) {
+        setIsProofPreviewOpen(false);
+        setProofPreviewUrl(null);
+        setProofPreviewLoading(false);
+        return;
+      }
+      if (isSubmitting || isProofBusy) return;
+      onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () =>
+      window.removeEventListener("keydown", handleKeyDown);
+  }, [isModal, isProofBusy, isProofPreviewOpen, isSubmitting, onClose]);
 
   const handleAmountChange = (event) => {
     const nextAmount = event.target.value;
@@ -449,84 +484,18 @@ export function PaymentEditView({
 
     setIsSubmitting(false);
     setIsSuccess(true);
-    router.push("/payments");
+
+    if (typeof onSaved === "function") {
+      onSaved();
+      return;
+    }
+
+    router.push(resolveSafePaymentsReturnTo(searchParams.get("returnTo")));
     router.refresh();
   };
 
-  return (
-    <div className="relative flex w-full flex-1 flex-col px-1">
-      <div className="flex flex-1 flex-col items-center justify-center py-16">
-        <div
-          className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4"
-          role="group"
-          aria-label={`DAIEGO y ${serviceName}`}
-        >
-          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200/80 bg-white p-2.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 tablet:h-36 tablet:w-36 tablet:p-3">
-            <DaiegoLogo
-              width={144}
-              height={144}
-              priority
-              className="h-full w-full object-contain"
-            />
-          </div>
-          <ServiceLogoLink href={serviceLink} serviceName={serviceName}>
-            {serviceImageUrl ? (
-              <img
-                src={serviceImageUrl}
-                alt={`Logo de ${serviceName}`}
-                className="h-full w-full object-contain p-2"
-              />
-            ) : (
-              <ServicePlaceholder className="h-full w-full" />
-            )}
-          </ServiceLogoLink>
-        </div>
-
-        <div
-          className={`mb-6 flex w-full items-center justify-center gap-1.5 ${isMobile ? "flex-col" : "flex-row"}`}
-        >
-          <h2 className="text-center text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-2xl">
-            {isMobile ? (
-              <span className="flex flex-col items-center">
-                <span>{clientLabel}</span>
-                {accountNumber ? (
-                  <span className="inline-flex items-center gap-1.5">
-                    <span>{accountNumber}</span>
-                    <CopyServiceNumberButton value={accountNumber} />
-                  </span>
-                ) : null}
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-x-1.5 whitespace-nowrap">
-                <span>{clientLabel}</span>
-                {accountNumber ? (
-                  <>
-                    <span aria-hidden>-</span>
-                    <span>{accountNumber}</span>
-                    <CopyServiceNumberButton value={accountNumber} />
-                  </>
-                ) : null}
-              </span>
-            )}
-          </h2>
-          {changeClientHref ? (
-            <Link
-              href={changeClientHref}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sky-500 transition-colors hover:bg-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 dark:text-sky-400 dark:hover:bg-sky-900/40"
-              aria-label="Cambiar cliente de este pago"
-              title="Cambiar cliente"
-            >
-              <Pencil className="h-4 w-4" aria-hidden />
-            </Link>
-          ) : null}
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="mx-auto w-full max-w-lg space-y-4"
-          aria-label="Editar pago"
-          noValidate
-        >
+  const formFields = (
+        <>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <label
@@ -774,23 +743,12 @@ export function PaymentEditView({
               {formError}
             </p>
           ) : null}
+        </>
+  );
 
-          <div className="flex justify-center pt-2">
-            <button
-              type="submit"
-              disabled={!canInteract}
-              className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-zinc-950"
-              aria-busy={isSubmitting}
-            >
-              {isSubmitting ? "Actualizando…" : "Actualizar datos"}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {isProofPreviewOpen ? (
+  const proofPreview = isProofPreviewOpen ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-60 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label="Vista previa del comprobante"
@@ -840,7 +798,213 @@ export function PaymentEditView({
             aria-label="Cerrar overlay"
           />
         </div>
-      ) : null}
+  ) : null;
+
+  if (isModal) {
+    return (
+      <>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm tablet:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+        >
+          <button
+            type="button"
+            className="absolute inset-0 cursor-default"
+            aria-label="Cerrar edición de pago"
+            disabled={!canDismissModal}
+            onClick={() => {
+              if (!canDismissModal) return;
+              onClose();
+            }}
+          />
+          <div className="relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900 max-h-[90dvh] p-6 tablet:p-8">
+            <div className="flex shrink-0 items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h2
+                  id={titleId}
+                  className="text-xl font-bold text-zinc-900 dark:text-zinc-50"
+                >
+                  Editar pago
+                </h2>
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-base text-zinc-700 dark:text-zinc-300 sm:text-lg">
+                  <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                    {clientLabel}
+                  </span>
+                  {accountNumber ? (
+                    <>
+                      <span aria-hidden className="text-zinc-400 dark:text-zinc-500">
+                        ·
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 font-medium text-zinc-800 dark:text-zinc-100">
+                        <span>{accountNumber}</span>
+                        <CopyServiceNumberButton value={accountNumber} />
+                      </span>
+                    </>
+                  ) : null}
+                  {serviceName ? (
+                    <>
+                      <span aria-hidden className="text-zinc-400 dark:text-zinc-500">
+                        ·
+                      </span>
+                      <span className="font-medium text-zinc-800 dark:text-zinc-100">
+                        {serviceName}
+                      </span>
+                    </>
+                  ) : null}
+                  {changeClientHref ? (
+                    <Link
+                      href={changeClientHref}
+                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sky-500 transition-colors hover:bg-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 dark:text-sky-400 dark:hover:bg-sky-900/40"
+                      aria-label="Cambiar cliente de este pago"
+                      title="Cambiar cliente"
+                    >
+                      <Pencil className="h-4 w-4" aria-hidden />
+                    </Link>
+                  ) : null}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!canDismissModal) return;
+                  onClose();
+                }}
+                disabled={!canDismissModal}
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                aria-label="Cerrar"
+              >
+                <X className="h-4 w-4" aria-hidden />
+              </button>
+            </div>
+
+            <div className="mt-6 min-h-0 flex-1 overflow-y-auto -mr-2 pr-2 tablet:mr-0 tablet:pr-0">
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-4 pb-2"
+                aria-label="Editar pago"
+                noValidate
+              >
+                {formFields}
+                <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!canDismissModal) return;
+                      onClose();
+                    }}
+                    disabled={!canDismissModal}
+                    className="inline-flex h-12 items-center justify-center rounded-xl border border-zinc-300 px-5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!canInteract}
+                    className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-zinc-950"
+                    aria-busy={isSubmitting}
+                  >
+                    {isSubmitting ? "Actualizando…" : "Actualizar datos"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {proofPreview}
+      </>
+    );
+  }
+
+  return (
+    <div className="relative flex w-full flex-1 flex-col px-1">
+      <div className="flex flex-1 flex-col items-center justify-center py-16">
+        <div
+          className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4"
+          role="group"
+          aria-label={`DAIEGO y ${serviceName}`}
+        >
+          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200/80 bg-white p-2.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 tablet:h-36 tablet:w-36 tablet:p-3">
+            <DaiegoLogo
+              width={144}
+              height={144}
+              priority
+              className="h-full w-full object-contain"
+            />
+          </div>
+          <ServiceLogoLink href={serviceLink} serviceName={serviceName}>
+            {serviceImageUrl ? (
+              <img
+                src={serviceImageUrl}
+                alt={`Logo de ${serviceName}`}
+                className="h-full w-full object-contain p-2"
+              />
+            ) : (
+              <ServicePlaceholder className="h-full w-full" />
+            )}
+          </ServiceLogoLink>
+        </div>
+
+        <div
+          className={`mb-6 flex w-full items-center justify-center gap-1.5 ${isMobile ? "flex-col" : "flex-row"}`}
+        >
+          <h2 className="text-center text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+            {isMobile ? (
+              <span className="flex flex-col items-center">
+                <span>{clientLabel}</span>
+                {accountNumber ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span>{accountNumber}</span>
+                    <CopyServiceNumberButton value={accountNumber} />
+                  </span>
+                ) : null}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-x-1.5 whitespace-nowrap">
+                <span>{clientLabel}</span>
+                {accountNumber ? (
+                  <>
+                    <span aria-hidden>-</span>
+                    <span>{accountNumber}</span>
+                    <CopyServiceNumberButton value={accountNumber} />
+                  </>
+                ) : null}
+              </span>
+            )}
+          </h2>
+          {changeClientHref ? (
+            <Link
+              href={changeClientHref}
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sky-500 transition-colors hover:bg-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 dark:text-sky-400 dark:hover:bg-sky-900/40"
+              aria-label="Cambiar cliente de este pago"
+              title="Cambiar cliente"
+            >
+              <Pencil className="h-4 w-4" aria-hidden />
+            </Link>
+          ) : null}
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="mx-auto w-full max-w-lg space-y-4"
+          aria-label="Editar pago"
+          noValidate
+        >
+          {formFields}
+          <div className="flex justify-center pt-2">
+            <button
+              type="submit"
+              disabled={!canInteract}
+              className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-zinc-950"
+              aria-busy={isSubmitting}
+            >
+              {isSubmitting ? "Actualizando…" : "Actualizar datos"}
+            </button>
+          </div>
+        </form>
+      </div>
+      {proofPreview}
     </div>
   );
 }

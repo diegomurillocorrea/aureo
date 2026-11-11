@@ -7,6 +7,7 @@ import { DaiegoLogo } from "@/components/daiego-logo";
 import { DaiegoLogoMark } from "@/components/daiego-logo-mark";
 import { ServiceLogoLink } from "@/components/service-logo-link";
 import { formatClientPhoneDisplay } from "@/lib/phone";
+import { resolveSafePaymentsReturnTo } from "@/lib/safe-payments-return-to";
 import {
   linkAccountToClientAction,
   searchClientsForHomeAction,
@@ -213,6 +214,7 @@ function HomeSearchView({ service }) {
   const [isLinking, setIsLinking] = useState(false);
 
   const paymentId = (searchParams.get("paymentId") ?? "").trim();
+  const paymentsReturnTo = searchParams.get("returnTo");
   const isChangingPaymentClient = Boolean(paymentId);
   const serviceName = service.name?.trim() || "Servicio";
   const serviceLink = typeof service.link === "string" ? service.link.trim() : "";
@@ -385,9 +387,13 @@ function HomeSearchView({ service }) {
       return;
     }
 
-    router.push(
-      `/${service.id}/${encodeURIComponent(account)}?paymentId=${encodeURIComponent(paymentId)}`
-    );
+    if (paymentsReturnTo) {
+      router.push(resolveSafePaymentsReturnTo(paymentsReturnTo));
+    } else {
+      router.push(
+        `/${service.id}/${encodeURIComponent(account)}?paymentId=${encodeURIComponent(paymentId)}`
+      );
+    }
     router.refresh();
   };
 
