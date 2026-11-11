@@ -1,6 +1,16 @@
+import { CLIENT_PHONE_COUNTRIES } from "@/lib/phone";
+
+function isStoredClientPhoneWithCountryCode(digits: string): boolean {
+  return CLIENT_PHONE_COUNTRIES.some(
+    (country) =>
+      digits.startsWith(country.callingCode) &&
+      digits.length === country.callingCode.length + country.localLength,
+  );
+}
+
 /**
  * Converts a stored/international number to WhatsApp's digits-only format.
- * Accepts +E.164, 00-prefix, or El Salvador digits already stored as 503XXXXXXXX.
+ * Accepts +E.164, 00-prefix, or app-stored digits with country code (SV/US).
  */
 export function normalizeWhatsAppPhoneNumber(
   value: string | null | undefined,
@@ -18,8 +28,8 @@ export function normalizeWhatsAppPhoneNumber(
     normalized = digits.slice(2);
   } else if (input.startsWith("+")) {
     normalized = digits;
-  } else if (/^503\d{8}$/.test(digits)) {
-    // Stored app format: 503XXXXXXXX (no leading +).
+  } else if (isStoredClientPhoneWithCountryCode(digits)) {
+    // Stored app format: 503XXXXXXXX or 1XXXXXXXXXX (no leading +).
     normalized = digits;
   } else {
     // Local numbers without country code are rejected so we never guess.

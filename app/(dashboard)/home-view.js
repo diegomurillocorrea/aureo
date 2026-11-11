@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { DaiegoLogo } from "@/components/daiego-logo";
 import { DaiegoLogoMark } from "@/components/daiego-logo-mark";
 import { ServiceLogoLink } from "@/components/service-logo-link";
-import { formatElSalvadorPhoneDisplay } from "@/lib/phone";
+import { formatClientPhoneDisplay } from "@/lib/phone";
 import {
   linkAccountToClientAction,
   searchClientsForHomeAction,
@@ -151,7 +151,7 @@ function getClientFullName(client) {
 
 function ClientSearchResultRow({ client, isSelected, onSelect }) {
   const fullName = getClientFullName(client);
-  const phone = formatElSalvadorPhoneDisplay(client?.phone_number);
+  const phone = formatClientPhoneDisplay(client?.phone_number);
   const label = phone ? `${fullName} · ${phone}` : fullName;
 
   return (

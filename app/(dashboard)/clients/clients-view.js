@@ -17,8 +17,13 @@ import {
   tableViewSectionTitleClass,
 } from "@/lib/table-scroll-shell";
 import {
-  formatElSalvadorPhoneDisplay,
-  formatLocalElSalvadorPhoneInput,
+  CLIENT_PHONE_COUNTRIES,
+  detectClientPhoneCountry,
+  extractLocalClientPhoneDigits,
+  formatClientPhoneDisplay,
+  formatLocalClientPhoneInput,
+  getClientPhoneCountryConfig,
+  toLocalClientPhoneInput,
 } from "@/lib/phone";
 import {
   createClientAction,
@@ -40,24 +45,9 @@ const EMPTY_FORM = {
   name: "",
   last_name: "",
   phone_number: "",
+  phone_country: "SV",
   reference: "",
 };
-
-const EL_SALVADOR_PHONE_PREFIX = "503";
-
-/**
- * Show only the local 8 digits in the form (country code is fixed in the UI).
- * @param {string | null | undefined} phone
- * @returns {string}
- */
-function toLocalPhoneInput(phone) {
-  const digits = (phone ?? "").replace(/\D/g, "");
-  if (!digits) return "";
-  if (digits.startsWith("503") && digits.length === 11) {
-    return digits.slice(3);
-  }
-  return digits.slice(-8);
-}
 
 function getServiceImageUrl(service) {
   if (!service?.image_bucket || !service?.image_path) return null;
@@ -261,7 +251,8 @@ export function ClientsView({ initialClients, fetchError }) {
     setFormData({
       name: client.name ?? "",
       last_name: client.last_name ?? "",
-      phone_number: toLocalPhoneInput(client.phone_number),
+      phone_number: toLocalClientPhoneInput(client.phone_number),
+      phone_country: detectClientPhoneCountry(client.phone_number),
       reference: client.reference ?? "",
     });
     setFormError(null);
@@ -688,7 +679,7 @@ export function ClientsView({ initialClients, fetchError }) {
                     {client.name} {client.last_name}
                   </span>
                   <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                    {formatElSalvadorPhoneDisplay(client.phone_number) || "—"}
+                    {formatClientPhoneDisplay(client.phone_number) || "—"}
                   </span>
                   {client.reference && (
                     <span className="text-xs text-zinc-500 dark:text-zinc-500">
@@ -757,7 +748,7 @@ export function ClientsView({ initialClients, fetchError }) {
                       {client.last_name}
                     </td>
                     <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
-                      {formatElSalvadorPhoneDisplay(client.phone_number) || "—"}
+                      {formatClientPhoneDisplay(client.phone_number) || "—"}
                     </td>
                     <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
                       {client.reference || "—"}
@@ -857,29 +848,61 @@ export function ClientsView({ initialClients, fetchError }) {
                   Número de teléfono
                 </label>
                 <div className="flex overflow-hidden rounded-xl border border-zinc-300 bg-white focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 dark:border-zinc-600 dark:bg-zinc-800 dark:focus-within:border-emerald-400 dark:focus-within:ring-emerald-500/30">
+                  <label className="sr-only" htmlFor="client-phone-country">
+                    País del teléfono
+                  </label>
+                  <select
+                    id="client-phone-country"
+                    aria-label="País del teléfono"
+                    value={formData.phone_country}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        phone_country: e.target.value,
+                        phone_number: "",
+                      }))
+                    }
+                    disabled={isSubmitting}
+                    className="shrink-0 border-0 border-r border-zinc-300 bg-zinc-50 px-2 py-2.5 text-sm font-medium text-zinc-700 focus:outline-none focus:ring-0 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-200"
+                  >
+                    {CLIENT_PHONE_COUNTRIES.map((country) => (
+                      <option key={country.code} value={country.code}>
+                        {country.label}
+                      </option>
+                    ))}
+                  </select>
                   <span
                     className="flex shrink-0 items-center border-r border-zinc-300 bg-zinc-50 px-3 text-sm font-medium text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-300"
                     aria-hidden
                   >
-                    +{EL_SALVADOR_PHONE_PREFIX}
+                    +
+                    {getClientPhoneCountryConfig(formData.phone_country)?.callingCode ??
+                      "503"}
                   </span>
                   <input
                     id="client-phone"
                     type="tel"
                     inputMode="numeric"
                     autoComplete="tel-national"
-                    maxLength={9}
-                    placeholder="0000 0000"
-                    value={formatLocalElSalvadorPhoneInput(formData.phone_number)}
-                    onChange={(e) =>
+                    placeholder={
+                      formData.phone_country === "US" ? "000 000 0000" : "0000 0000"
+                    }
+                    value={formatLocalClientPhoneInput(
+                      formData.phone_number,
+                      formData.phone_country
+                    )}
+                    onChange={(e) => {
                       setFormData((prev) => ({
                         ...prev,
-                        phone_number: e.target.value.replace(/\D/g, "").slice(0, 8),
-                      }))
-                    }
+                        phone_number: extractLocalClientPhoneDigits(
+                          e.target.value,
+                          prev.phone_country
+                        ),
+                      }));
+                    }}
                     disabled={isSubmitting}
                     className="w-full border-0 bg-transparent px-4 py-2.5 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-0 disabled:opacity-50 dark:text-zinc-100 dark:placeholder-zinc-500"
-                    aria-label="Número de teléfono de El Salvador"
+                    aria-label="Número de teléfono"
                   />
                 </div>
               </div>
@@ -1375,7 +1398,7 @@ export function ClientsView({ initialClients, fetchError }) {
                   <ul className="max-h-[min(40vh,18rem)] divide-y divide-zinc-100 overflow-y-auto p-1 dark:divide-zinc-800">
                     {filteredReassignResults.map((client) => {
                       const fullName = getClientFullName(client);
-                      const phone = formatElSalvadorPhoneDisplay(client.phone_number);
+                      const phone = formatClientPhoneDisplay(client.phone_number);
                       const label = phone ? `${fullName} · ${phone}` : fullName;
 
                       return (
@@ -1480,7 +1503,7 @@ export function ClientsView({ initialClients, fetchError }) {
                 >
                   Ya existe un contacto registrado con el número{" "}
                   <strong className="text-zinc-900 dark:text-zinc-50">
-                    {formatElSalvadorPhoneDisplay(duplicateClient.phone_number)}
+                    {formatClientPhoneDisplay(duplicateClient.phone_number)}
                   </strong>
                   .
                 </p>
@@ -1495,7 +1518,7 @@ export function ClientsView({ initialClients, fetchError }) {
                 {duplicateClient.name} {duplicateClient.last_name}
               </p>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                {formatElSalvadorPhoneDisplay(duplicateClient.phone_number) || "—"}
+                {formatClientPhoneDisplay(duplicateClient.phone_number) || "—"}
               </p>
               {duplicateClient.reference && (
                 <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-500">

@@ -3,8 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { requirePermission } from "@/lib/auth/permissions";
+import { normalizeClientPhoneNumber } from "@/lib/phone";
 
-const EL_SALVADOR_COUNTRY_CODE = "503";
 const SEARCH_MIN_LENGTH = 2;
 const SEARCH_CLIENTS_LIMIT = 25;
 
@@ -13,6 +13,7 @@ const SEARCH_CLIENTS_LIMIT = 25;
  * @property {string} name
  * @property {string} last_name
  * @property {string} [phone_number]
+ * @property {string} [phone_country]
  * @property {string} [reference]
  */
 
@@ -24,34 +25,6 @@ const SEARCH_CLIENTS_LIMIT = 25;
  * @property {string | null} phone_number
  * @property {string | null} reference
  */
-
-/**
- * Normalize client phones to El Salvador digits: 503XXXXXXXX (no leading +).
- * Accepts local 8-digit numbers or values that already include 503 / +503.
- * @param {string | null | undefined} value
- * @returns {{ phone: string | null; error: string | null }}
- */
-function normalizeElSalvadorPhoneNumber(value) {
-  const input = value?.trim() ?? "";
-  if (!input) return { phone: null, error: null };
-
-  const digits = input.replace(/\D/g, "");
-  if (!digits) return { phone: null, error: null };
-
-  let localDigits = digits;
-  if (digits.startsWith(EL_SALVADOR_COUNTRY_CODE) && digits.length === 11) {
-    localDigits = digits.slice(EL_SALVADOR_COUNTRY_CODE.length);
-  }
-
-  if (localDigits.length !== 8) {
-    return {
-      phone: null,
-      error: "El teléfono debe tener 8 dígitos (El Salvador).",
-    };
-  }
-
-  return { phone: `${EL_SALVADOR_COUNTRY_CODE}${localDigits}`, error: null };
-}
 
 /**
  * Find an existing client that uses the given phone number.
@@ -90,8 +63,9 @@ export async function createClientAction(formData) {
 
   const name = formData.name?.trim();
   const last_name = formData.last_name?.trim();
-  const { phone: phone_number, error: phoneError } = normalizeElSalvadorPhoneNumber(
-    formData.phone_number
+  const { phone: phone_number, error: phoneError } = normalizeClientPhoneNumber(
+    formData.phone_number,
+    formData.phone_country ?? "SV"
   );
 
   if (!name || !last_name) {
@@ -154,8 +128,9 @@ export async function updateClientAction(id, formData) {
 
   const name = formData.name?.trim();
   const last_name = formData.last_name?.trim();
-  const { phone: phone_number, error: phoneError } = normalizeElSalvadorPhoneNumber(
-    formData.phone_number
+  const { phone: phone_number, error: phoneError } = normalizeClientPhoneNumber(
+    formData.phone_number,
+    formData.phone_country ?? "SV"
   );
 
   if (!name || !last_name) {
