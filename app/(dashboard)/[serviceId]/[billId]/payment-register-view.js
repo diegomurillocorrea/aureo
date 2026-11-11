@@ -3,7 +3,7 @@
 import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, Copy } from "lucide-react";
-import { DaiegoLogo } from "@/components/daiego-logo";
+import { AureoIsotipo } from "@/components/aureo-isotipo";
 import { ServiceLogoLink } from "@/components/service-logo-link";
 import {
   createPaymentAction,
@@ -13,7 +13,7 @@ import { usePermissions } from "../../permissions-provider";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 
 const inputClassName =
-  "w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+  "w-full rounded-xl border border-marea/20 bg-crema px-4 py-3 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50      ";
 
 const ALLOWED_PROOF_TYPES = [
   "image/jpeg",
@@ -87,7 +87,7 @@ function getClientDisplayName(clients) {
 function ServicePlaceholder({ className = "h-full w-full" }) {
   return (
     <div
-      className={`flex items-center justify-center bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 ${className}`}
+      className={`flex items-center justify-center bg-bruma text-marea ${className}`}
       aria-hidden
     >
       <svg
@@ -128,12 +128,12 @@ function CopyServiceNumberButton({ value }) {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50"
       aria-label={label}
       title={label}
     >
       {isCopied ? (
-        <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
+        <Check className="h-4 w-4 text-marea" aria-hidden />
       ) : (
         <Copy className="h-4 w-4" aria-hidden />
       )}
@@ -362,10 +362,10 @@ export function PaymentRegisterView({
         <div
           className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4"
           role="group"
-          aria-label={`DAIEGO y ${serviceName}`}
+          aria-label={`Aureo y ${serviceName}`}
         >
-          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200/80 bg-white p-2.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 tablet:h-36 tablet:w-36 tablet:p-3">
-            <DaiegoLogo
+          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-marea/20 bg-crema p-2.5 shadow-sm tablet:h-36 tablet:w-36 tablet:p-3">
+            <AureoIsotipo
               width={144}
               height={144}
               priority
@@ -386,7 +386,7 @@ export function PaymentRegisterView({
         </div>
 
         <div className="mb-6 w-full text-center">
-          <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+          <h2 className="text-xl font-semibold tracking-tight text-tinta sm:text-2xl">
             {isMobile ? (
               <span className="flex flex-col items-center">
                 <span>{clientLabel}</span>
@@ -422,7 +422,7 @@ export function PaymentRegisterView({
             <div>
               <label
                 htmlFor={amountId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Monto
               </label>
@@ -446,7 +446,7 @@ export function PaymentRegisterView({
               <div className="mb-1.5 flex items-center justify-between gap-2">
                 <label
                   htmlFor={commissionId}
-                  className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="block text-sm font-medium text-tinta"
                 >
                   Comisión
                 </label>
@@ -458,17 +458,17 @@ export function PaymentRegisterView({
                   aria-label="Activar o desactivar comisión"
                   onClick={handleCommissionSwitchToggle}
                   disabled={isFormLocked}
-                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-950 ${
-                    isCommissionEnabled
-                      ? "bg-emerald-600"
-                      : "bg-zinc-300 dark:bg-zinc-600"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+ isCommissionEnabled
+ ? "bg-ambar"
+ : "bg-bruma "
+ }`}
                 >
                   <span
                     aria-hidden
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                      isCommissionEnabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-crema shadow transition-transform ${
+ isCommissionEnabled ? "translate-x-6" : "translate-x-1"
+ }`}
                   />
                 </button>
               </div>
@@ -492,7 +492,7 @@ export function PaymentRegisterView({
             <div>
               <label
                 htmlFor={methodId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Método de pago
               </label>
@@ -519,7 +519,7 @@ export function PaymentRegisterView({
             <div>
               <label
                 htmlFor={proofId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Comprobante
               </label>
@@ -546,7 +546,7 @@ export function PaymentRegisterView({
                         type="button"
                         onClick={handleClearProof}
                         disabled={isSubmitting || isSuccess}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-50"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus:ring-2 focus:ring-marea/50"
                         aria-label="Quitar comprobante"
                       >
                         <svg
@@ -570,7 +570,7 @@ export function PaymentRegisterView({
                       type="button"
                       onClick={() => proofInputRef.current?.click()}
                       disabled={isSubmitting || isSuccess || !canCreate}
-                      className={`${inputClassName} flex items-center justify-center gap-2 text-sm font-medium text-zinc-600 hover:border-emerald-500 hover:text-zinc-900 dark:text-zinc-300 dark:hover:border-emerald-400 dark:hover:text-zinc-50`}
+                      className={`${inputClassName} flex items-center justify-center gap-2 text-sm font-medium text-marea hover:border-marea hover:text-tinta `}
                       aria-label="Subir comprobante"
                     >
                       <svg
@@ -593,7 +593,7 @@ export function PaymentRegisterView({
                 </div>
               ) : (
                 <div
-                  className={`${inputClassName} flex items-center justify-center text-sm text-zinc-400 dark:text-zinc-500`}
+                  className={`${inputClassName} flex items-center justify-center text-sm text-marea `}
                   role="status"
                   aria-label="Sin permiso para subir comprobante"
                 >
@@ -606,7 +606,7 @@ export function PaymentRegisterView({
           {formError ? (
             <p
               id="payment-register-error"
-              className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/50 dark:text-red-300"
+              className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
               role="alert"
             >
               {formError}
@@ -617,7 +617,7 @@ export function PaymentRegisterView({
             <button
               type="submit"
               disabled={isSubmitting || isSuccess || !canCreate}
-              className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-zinc-950"
+              className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-ambar px-6 text-sm font-semibold text-tinta transition-colors hover:bg-ambar focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               aria-busy={isSubmitting}
             >
               {isSubmitting ? "Registrando…" : "Registrar pago"}
@@ -638,17 +638,17 @@ export function PaymentRegisterViewSkeleton() {
     >
       <p className="sr-only">Cargando registro de pago…</p>
       <div className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4">
-        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:h-36 tablet:w-36" />
-        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:h-36 tablet:w-36" />
+        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-bruma tablet:h-36 tablet:w-36" />
+        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-bruma tablet:h-36 tablet:w-36" />
       </div>
-      <div className="mb-6 h-6 w-56 max-w-full animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
+      <div className="mb-6 h-6 w-56 max-w-full animate-pulse rounded-lg bg-bruma" />
       <div className="grid w-full grid-cols-2 gap-3">
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
       </div>
-      <div className="mt-6 h-12 w-40 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+      <div className="mt-6 h-12 w-40 animate-pulse rounded-xl bg-bruma" />
     </div>
   );
 }

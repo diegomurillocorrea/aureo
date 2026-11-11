@@ -60,14 +60,14 @@ function PermissionMatrix({ selected, onChange, disabled }) {
   };
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-700">
+    <div className="overflow-x-auto rounded-xl border border-bruma">
       <table className="w-full min-w-[32rem] text-left text-sm">
         <thead>
-          <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800/50">
-            <th className="px-3 py-2.5 font-semibold text-zinc-700 dark:text-zinc-300">
+          <tr className="border-b border-bruma bg-crema">
+            <th className="px-3 py-2.5 font-semibold text-tinta">
               Sección
             </th>
-            <th className="px-3 py-2.5 font-semibold text-zinc-700 dark:text-zinc-300">
+            <th className="px-3 py-2.5 font-semibold text-tinta">
               Permisos
             </th>
           </tr>
@@ -78,9 +78,9 @@ function PermissionMatrix({ selected, onChange, disabled }) {
             return (
               <tr
                 key={resource.id}
-                className="border-b border-zinc-100 last:border-0 dark:border-zinc-800"
+                className="border-b border-bruma last:border-0"
               >
-                <td className="whitespace-nowrap px-3 py-3 font-medium text-zinc-900 dark:text-zinc-50">
+                <td className="whitespace-nowrap px-3 py-3 font-medium text-tinta">
                   {resource.label}
                 </td>
                 <td className="px-3 py-3">
@@ -92,17 +92,17 @@ function PermissionMatrix({ selected, onChange, disabled }) {
                         <label
                           key={key}
                           className={`inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors ${
-                            checked
-                              ? "border-emerald-500 bg-emerald-50 text-emerald-800 dark:border-emerald-500 dark:bg-emerald-950/40 dark:text-emerald-300"
-                              : "border-zinc-200 bg-white text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400"
-                          } ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
+ checked
+ ? "border-marea bg-bruma text-tinta "
+ : "border-marea/20 bg-crema text-marea "
+ } ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
                         >
                           <input
                             type="checkbox"
                             checked={checked}
                             disabled={disabled}
                             onChange={() => toggle(resource.id, action.id)}
-                            className="h-3.5 w-3.5 rounded border-zinc-300 text-emerald-600 focus:ring-emerald-500"
+                            className="h-3.5 w-3.5 rounded border-bruma text-marea focus:ring-marea"
                             aria-label={`${resource.label} — ${action.label}`}
                           />
                           {action.label}
@@ -233,7 +233,7 @@ export function RolesView({ initialRoles, fetchError }) {
   }, []);
 
   const inputClass =
-    "w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+    "w-full rounded-xl border border-marea/20 bg-crema px-3 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50      ";
 
   return (
     <div className={tableViewRootClass}>
@@ -241,10 +241,10 @@ export function RolesView({ initialRoles, fetchError }) {
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span
-              className="h-10 w-1 shrink-0 rounded-full bg-emerald-500"
+              className="h-10 w-1 shrink-0 rounded-full bg-ambar"
               aria-hidden
             />
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tablet:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-tinta tablet:text-3xl">
               Roles
             </h1>
           </div>
@@ -252,19 +252,19 @@ export function RolesView({ initialRoles, fetchError }) {
             <button
               type="button"
               onClick={openCreate}
-              className="inline-flex h-11 w-fit shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-all duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-emerald-500 dark:hover:bg-emerald-600 dark:focus:ring-offset-zinc-900"
+              className="inline-flex h-11 w-fit shrink-0 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-all duration-200 hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea focus:ring-offset-2"
               aria-label="Agregar rol"
             >
               Agregar rol
             </button>
           )}
         </div>
-        <p className="pl-4 text-sm text-zinc-600 dark:text-zinc-400 tablet:text-base">
+        <p className="pl-4 text-sm text-marea tablet:text-base">
           Crear roles y configurar permisos por sección y acción.
           {roles.length > 0 ? (
             <>
               {" "}
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">
+              <span className="font-medium text-tinta">
                 {roles.length} {roles.length === 1 ? "rol" : "roles"}
               </span>
             </>
@@ -275,7 +275,7 @@ export function RolesView({ initialRoles, fetchError }) {
       {fetchError && (
         <div
           role="alert"
-          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {fetchError}
         </div>
@@ -292,11 +292,11 @@ export function RolesView({ initialRoles, fetchError }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o descripción..."
-            className="w-full rounded-full border border-zinc-300 bg-white pl-10 pr-4 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-500/50 dark:bg-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30"
+            className="w-full rounded-full border border-marea/30 bg-crema pl-10 pr-4 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20"
             aria-label="Buscar roles"
           />
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-marea"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -314,7 +314,7 @@ export function RolesView({ initialRoles, fetchError }) {
 
       <div className={tableViewSectionClass}>
         <div className={tableViewSectionTitleClass}>
-          <h2 className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+          <h2 className="text-sm font-semibold text-crema">
             Lista de roles
           </h2>
         </div>
@@ -322,7 +322,7 @@ export function RolesView({ initialRoles, fetchError }) {
         {roles.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-5 px-4 py-20 text-center">
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-bruma text-tinta"
               aria-hidden
             >
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -334,7 +334,7 @@ export function RolesView({ initialRoles, fetchError }) {
                 />
               </svg>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               {fetchError
                 ? "No se pudieron cargar los roles."
                 : "Aún no hay roles configurados."}
@@ -343,7 +343,7 @@ export function RolesView({ initialRoles, fetchError }) {
               <button
                 type="button"
                 onClick={openCreate}
-                className="inline-flex h-11 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-all hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                className="inline-flex h-11 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-all hover:bg-ambar/90"
                 aria-label="Agregar rol"
               >
                 Agregar rol
@@ -352,13 +352,13 @@ export function RolesView({ initialRoles, fetchError }) {
           </div>
         ) : filteredRoles.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-5 px-4 py-20 text-center">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               No se encontraron roles con ese criterio.
             </p>
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-marea/20 bg-crema px-5 text-sm font-medium text-tinta transition-all hover:bg-crema"
               aria-label="Limpiar búsqueda"
             >
               Limpiar búsqueda
@@ -367,25 +367,25 @@ export function RolesView({ initialRoles, fetchError }) {
         ) : isMobile ? (
           <ul className={tableMobileListAltClass} role="list">
             {filteredRoles.map((role, index) => (
-              <li key={role.id} className="flex flex-col gap-2 px-4 py-4 transition-colors hover:bg-emerald-50/40 dark:hover:bg-emerald-950/10 tablet:px-6">
+              <li key={role.id} className="flex flex-col gap-2 px-4 py-4 transition-colors hover:bg-bruma/40 tablet:px-6">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400" aria-hidden>
+                  <span className="text-xs font-medium text-marea" aria-hidden>
                     {index + 1}.
                   </span>
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                  <span className="font-semibold text-tinta">
                     {role.name}
                     {role.is_system && (
-                      <span className="ml-2 rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400">
+                      <span className="ml-2 rounded-full bg-bruma px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-marea">
                         Sistema
                       </span>
                     )}
                   </span>
                   {role.description && (
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                    <span className="text-sm text-marea">
                       {role.description}
                     </span>
                   )}
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-marea">
                     {(role.permissions ?? []).length} permiso(s) · {formatDateEsSv(role.created_at)}
                   </span>
                 </div>
@@ -405,23 +405,23 @@ export function RolesView({ initialRoles, fetchError }) {
           <div className={tableScrollBodyClass}>
             <table className="w-full text-left text-sm" role="grid">
               <thead className={tableHeadClass}>
-                <tr className="border-b border-zinc-200/80 dark:border-zinc-800">
-                  <th className="w-12 px-2 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-4" scope="col">
+                <tr className="border-b border-bruma">
+                  <th className="w-12 px-2 py-3.5 font-semibold text-tinta tablet:px-4" scope="col">
                     #
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Nombre
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Descripción
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Permisos
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Creado
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Acciones
                   </th>
                 </tr>
@@ -430,26 +430,26 @@ export function RolesView({ initialRoles, fetchError }) {
                 {filteredRoles.map((role, index) => (
                   <tr
                     key={role.id}
-                    className="border-b border-zinc-100 last:border-0 transition-colors hover:bg-emerald-50/40 dark:border-zinc-800 dark:hover:bg-emerald-950/10"
+                    className="border-b border-bruma last:border-0 transition-colors hover:bg-bruma/40"
                   >
-                    <td className="w-12 px-2 py-3.5 text-zinc-500 dark:text-zinc-400 tablet:px-4">
+                    <td className="w-12 px-2 py-3.5 text-marea tablet:px-4">
                       {index + 1}
                     </td>
-                    <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-50 tablet:px-6">
+                    <td className="px-4 py-3.5 font-medium text-tinta tablet:px-6">
                       {role.name}
                       {role.is_system && (
-                        <span className="ml-2 rounded-full bg-zinc-200 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400">
+                        <span className="ml-2 rounded-full bg-bruma px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-marea">
                           Sistema
                         </span>
                       )}
                     </td>
-                    <td className="max-w-xs truncate px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
+                    <td className="max-w-xs truncate px-4 py-3.5 text-marea tablet:px-6">
                       {role.description || "—"}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {(role.permissions ?? []).length}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-500 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {formatDateEsSv(role.created_at)}
                     </td>
                     <td className="px-4 py-3.5 tablet:px-6">
@@ -478,20 +478,20 @@ export function RolesView({ initialRoles, fetchError }) {
           aria-labelledby="role-form-title"
         >
           <div
-            className="max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 tablet:p-8"
+            className="max-h-[90dvh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl tablet:p-8"
             onKeyDown={(e) => e.key === "Escape" && closeForm()}
           >
-            <h2 id="role-form-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h2 id="role-form-title" className="text-xl font-bold text-tinta">
               {isEditing ? "Editar rol" : "Agregar rol"}
             </h2>
             {isSystemRole && (
-              <p className="mt-2 text-sm text-amber-700 dark:text-amber-400">
+              <p className="mt-2 text-sm text-amber-700">
                 Este es un rol de sistema. Sus permisos no se pueden modificar desde aquí.
               </p>
             )}
             <form onSubmit={handleFormSubmit} className="mt-6 flex flex-col gap-5">
               <div>
-                <label htmlFor="role-name" className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <label htmlFor="role-name" className="mb-1.5 block text-sm font-medium text-tinta">
                   Nombre <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -505,7 +505,7 @@ export function RolesView({ initialRoles, fetchError }) {
                 />
               </div>
               <div>
-                <label htmlFor="role-description" className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <label htmlFor="role-description" className="mb-1.5 block text-sm font-medium text-tinta">
                   Descripción
                 </label>
                 <input
@@ -518,7 +518,7 @@ export function RolesView({ initialRoles, fetchError }) {
                 />
               </div>
               <div>
-                <span className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <span className="mb-2 block text-sm font-medium text-tinta">
                   Permisos
                 </span>
                 <PermissionMatrix
@@ -528,7 +528,7 @@ export function RolesView({ initialRoles, fetchError }) {
                 />
               </div>
               {formError && (
-                <div role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300">
+                <div role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">
                   {formError}
                 </div>
               )}
@@ -537,7 +537,7 @@ export function RolesView({ initialRoles, fetchError }) {
                   type="button"
                   onClick={closeForm}
                   disabled={isSubmitting}
-                  className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                 >
                   Cancelar
                 </button>
@@ -545,7 +545,7 @@ export function RolesView({ initialRoles, fetchError }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-emerald-700 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                    className="flex-1 rounded-xl bg-ambar px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-ambar/90 disabled:opacity-50"
                     aria-busy={isSubmitting}
                   >
                     {isSubmitting ? "Guardando…" : isEditing ? "Guardar" : "Crear"}
@@ -564,15 +564,15 @@ export function RolesView({ initialRoles, fetchError }) {
           aria-modal="true"
           aria-labelledby="delete-dialog-title"
         >
-          <div className="w-full max-w-sm rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 id="delete-dialog-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+          <div className="w-full max-w-sm rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl">
+            <h2 id="delete-dialog-title" className="text-xl font-bold text-tinta">
               Eliminar rol
             </h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 text-sm text-marea">
               ¿Eliminar el rol <strong>{deleteTarget.name}</strong>? Esta acción no se puede deshacer.
             </p>
             {deleteError && (
-              <div role="alert" className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300">
+              <div role="alert" className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700">
                 {deleteError}
               </div>
             )}
@@ -581,7 +581,7 @@ export function RolesView({ initialRoles, fetchError }) {
                 type="button"
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
-                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
               >
                 Cancelar
               </button>

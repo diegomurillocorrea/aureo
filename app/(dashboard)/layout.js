@@ -5,13 +5,17 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
-import { useTheme } from "@/hooks/use-theme";
 import { Footer } from "@/components/footer";
-import { DaiegoLogo } from "@/components/daiego-logo";
+import { AureoLogo } from "@/components/aureo-logo";
 import { PermissionsProvider, usePermissions } from "./permissions-provider";
-import { HomePixelBlastBackground } from "@/components/home-pixel-blast-background";
 import { HomeShellBackLink } from "@/components/home-shell-back-link";
 import { usesTableScrollShell } from "@/lib/table-scroll-shell";
+import {
+  chromeFocusRingClass,
+  navActiveClass,
+  navInactiveClass,
+  shellActionClassName,
+} from "@/lib/aureo-ui";
 
 function useUser() {
   const [user, setUser] = useState(null);
@@ -40,7 +44,7 @@ function UserDisplay() {
   if (!name) return null;
   return (
     <div
-      className="rounded-xl px-4 py-2 text-sm text-zinc-500 dark:text-zinc-400"
+      className="rounded-xl px-4 py-2 text-sm text-crema/70"
       aria-label={`Conectado como ${name}`}
     >
       <span className="truncate block">{name}</span>
@@ -65,11 +69,10 @@ function usesHomeShell(pathname) {
   const segments = pathname.split("/").filter(Boolean);
   if (segments.length === 0) return false;
   if (SIDEBAR_PATH_PREFIXES.includes(`/${segments[0]}`)) return false;
-  // Home-style shell for /[serviceId] search and /[serviceId]/[billId] register/edit
   return segments.length === 1 || segments.length === 2;
 }
 
-function NavContent({ pathname, onNavClick, hideLogo, hideThemeToggle }) {
+function NavContent({ pathname, onNavClick, hideLogo }) {
   const { can, isLoading } = usePermissions();
   const visibleItems = isLoading
     ? NAV_ITEMS
@@ -77,21 +80,19 @@ function NavContent({ pathname, onNavClick, hideLogo, hideThemeToggle }) {
   return (
     <>
       {!hideLogo && (
-        <div className="flex h-16 items-center border-b border-zinc-200/80 px-5 dark:border-zinc-800">
+        <div className="flex h-16 items-center border-b border-crema/15 px-5">
           <Link
             href="/"
             onClick={onNavClick}
-            className="flex min-w-0 items-center gap-3 rounded-lg text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-50 dark:focus:ring-offset-zinc-900"
-            aria-label="Ir a inicio — DAIEGO Receipts"
+            className={`flex min-w-0 items-center rounded-lg ${chromeFocusRingClass}`}
+            aria-label="Ir a inicio — Aureo"
           >
-            <DaiegoLogo
-              width={56}
-              height={56}
-              className="h-12 w-12 shrink-0 object-contain"
+            <AureoLogo
+              variant="claro"
+              width={140}
+              height={40}
+              className="h-10 w-auto max-w-[10rem] shrink-0 object-contain"
             />
-            <span className="truncate text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
-              Receipts
-            </span>
           </Link>
         </div>
       )}
@@ -105,10 +106,8 @@ function NavContent({ pathname, onNavClick, hideLogo, hideThemeToggle }) {
               key={item.href}
               href={item.href}
               onClick={onNavClick}
-              className={`rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:focus:ring-offset-zinc-900 ${
-                isActive
-                  ? "bg-emerald-100 text-emerald-800 shadow-[inset_3px_0_0_0_#10b981] dark:bg-emerald-950/50 dark:text-emerald-300 dark:shadow-[inset_3px_0_0_0_#34d399]"
-                  : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800/80 dark:hover:text-zinc-50"
+              className={`rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${chromeFocusRingClass} ${
+                isActive ? navActiveClass : navInactiveClass
               }`}
               aria-current={isActive ? "page" : undefined}
             >
@@ -117,68 +116,13 @@ function NavContent({ pathname, onNavClick, hideLogo, hideThemeToggle }) {
           );
         })}
       </nav>
-      <div className="border-t border-zinc-200/80 p-3 dark:border-zinc-800">
+      <div className="border-t border-crema/15 p-3">
         <div className="flex flex-col gap-2">
           <UserDisplay />
-          {!hideThemeToggle && <ThemeToggle />}
           <SignOutButton />
         </div>
       </div>
     </>
-  );
-}
-
-function MobileThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-
-  return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-900"
-      aria-label={theme === "light" ? "Cambiar a modo oscuro" : "Cambiar a modo claro"}
-    >
-      {theme === "light" ? (
-        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      ) : (
-        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      )}
-    </button>
-  );
-}
-
-function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme();
-
-  return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      className="w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-400 dark:hover:bg-zinc-800/80 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-900"
-      aria-label={theme === "light" ? "Cambiar a modo oscuro" : "Cambiar a modo claro"}
-    >
-      <span className="flex items-center gap-2">
-        {theme === "light" ? (
-          <>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-            Modo oscuro
-          </>
-        ) : (
-          <>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            Modo claro
-          </>
-        )}
-      </span>
-    </button>
   );
 }
 
@@ -194,16 +138,13 @@ function SignOutButton() {
     <button
       type="button"
       onClick={handleSignOut}
-      className="w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-400 dark:hover:bg-zinc-800/80 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-900"
+      className={`w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-crema/80 transition-all duration-200 hover:bg-bruma/20 hover:text-crema ${chromeFocusRingClass}`}
       aria-label="Cerrar sesión"
     >
       Cerrar sesión
     </button>
   );
 }
-
-const homeShellActionClassName =
-  "inline-flex h-10 items-center gap-2 rounded-xl border border-zinc-200/80 bg-white/80 px-3 text-sm font-medium text-zinc-600 shadow-sm backdrop-blur-sm transition-colors hover:border-zinc-300 hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:border-zinc-700 dark:bg-zinc-900/80 dark:text-zinc-300 dark:hover:border-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-950";
 
 function AdminIcon() {
   return (
@@ -257,7 +198,7 @@ function HomeUserMenu() {
     <div className="flex flex-wrap items-center justify-end gap-2">
       <Link
         href="/payments"
-        className={homeShellActionClassName}
+        className={shellActionClassName}
         aria-label="Ir a administración"
       >
         <AdminIcon />
@@ -266,7 +207,7 @@ function HomeUserMenu() {
       <button
         type="button"
         onClick={handleSignOut}
-        className={homeShellActionClassName}
+        className={shellActionClassName}
         aria-label="Cerrar sesión"
       >
         <SignOutIcon />
@@ -291,10 +232,8 @@ export default function DashboardLayout({ children }) {
   if (isHome) {
     return (
       <PermissionsProvider>
-        <div className="fixed inset-0 flex flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-950">
-          <HomePixelBlastBackground />
+        <div className="fixed inset-0 flex flex-col overflow-hidden bg-crema">
           <div className="absolute left-6 top-6 z-20 flex items-center gap-2">
-            <MobileThemeToggle />
             <Suspense fallback={null}>
               <HomeShellBackLink />
             </Suspense>
@@ -321,18 +260,17 @@ export default function DashboardLayout({ children }) {
 
   return (
     <PermissionsProvider>
-    <div className="fixed inset-0 flex overflow-hidden bg-zinc-50 dark:bg-zinc-950">
-      {/* Mobile: top bar with menu button */}
+    <div className="fixed inset-0 flex overflow-hidden bg-crema">
       {isMobile && (
         <header
-          className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between gap-3 border-b border-zinc-200/80 bg-white/95 px-4 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/95"
+          className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between gap-3 border-b border-crema/15 bg-tinta px-4"
           aria-label="App bar"
         >
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-900"
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-crema/80 transition-colors hover:bg-bruma/20 hover:text-crema ${chromeFocusRingClass}`}
               aria-label="Abrir menú"
               aria-expanded={mobileMenuOpen}
             >
@@ -354,37 +292,32 @@ export default function DashboardLayout({ children }) {
             <Link
               href="/"
               onClick={closeMobileMenu}
-              className="flex min-w-0 items-center gap-2 rounded-lg text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-50 dark:focus:ring-offset-zinc-900"
-              aria-label="Ir a inicio — DAIEGO Receipts"
+              className={`flex min-w-0 items-center rounded-lg ${chromeFocusRingClass}`}
+              aria-label="Ir a inicio — Aureo"
             >
-              <DaiegoLogo
-                width={40}
-                height={40}
-                className="h-9 w-9 shrink-0 object-contain"
+              <AureoLogo
+                variant="claro"
+                width={120}
+                height={32}
+                className="h-8 w-auto max-w-[8rem] shrink-0 object-contain"
               />
-              <span className="truncate text-lg font-bold tracking-tight text-zinc-900 dark:text-white">
-                Receipts
-              </span>
             </Link>
           </div>
-          <MobileThemeToggle />
         </header>
       )}
 
-      {/* Mobile: overlay when menu open */}
       {isMobile && mobileMenuOpen && (
         <button
           type="button"
           onClick={closeMobileMenu}
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-200"
+          className="fixed inset-0 z-40 bg-tinta/60 backdrop-blur-sm transition-opacity duration-200"
           aria-label="Cerrar menú"
         />
       )}
 
-      {/* Sidebar: drawer on mobile (slide-in), sidebar on tablet/desktop */}
       <aside
         className={`
-          flex h-full w-64 flex-col border-r border-zinc-200/80 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:shadow-none
+          flex h-full w-64 flex-col border-r border-crema/10 bg-tinta shadow-sm
           tablet:relative tablet:flex tablet:shadow-lg
           ${isMobile ? "fixed inset-y-0 left-0 z-50 flex transform transition-transform duration-300 ease-out" : ""}
           ${isMobile && !mobileMenuOpen ? "-translate-x-full" : ""}
@@ -393,14 +326,14 @@ export default function DashboardLayout({ children }) {
         aria-label="Dashboard navigation"
       >
         {isMobile && (
-          <div className="flex h-14 items-center justify-between border-b border-zinc-200/80 px-4 dark:border-zinc-800">
-            <span className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+          <div className="flex h-14 items-center justify-between border-b border-crema/15 px-4">
+            <span className="text-base font-semibold text-crema">
               Menú
             </span>
             <button
               type="button"
               onClick={closeMobileMenu}
-              className="flex h-10 w-10 items-center justify-center rounded-xl text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+              className={`flex h-10 w-10 items-center justify-center rounded-xl text-crema/80 transition-colors hover:bg-bruma/20 hover:text-crema ${chromeFocusRingClass}`}
               aria-label="Cerrar menú"
             >
               <svg
@@ -424,11 +357,9 @@ export default function DashboardLayout({ children }) {
           pathname={pathname}
           onNavClick={isMobile ? closeMobileMenu : undefined}
           hideLogo={isMobile}
-          hideThemeToggle={isMobile}
         />
       </aside>
 
-      {/* Main content: payments page scrolls only inside the table; other pages scroll here. */}
       <main
         className={`flex min-h-0 flex-1 flex-col tablet:min-w-0 ${isTableScrollPage ? "overflow-hidden" : "overflow-y-auto"}`}
       >

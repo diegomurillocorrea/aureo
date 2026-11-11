@@ -41,15 +41,15 @@ export async function generateMetadata({ params, searchParams }) {
 function PaymentNotFoundMessage({ title, description, href, linkLabel }) {
   return (
     <div className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-16 text-center">
-      <h1 className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+      <h1 className="mb-2 text-xl font-semibold text-tinta ">
         {title}
       </h1>
-      <p className="mb-6 text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="mb-6 text-sm text-marea ">
         {description}
       </p>
       <Link
         href={href}
-        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:focus:ring-offset-zinc-950"
+        className="inline-flex min-h-11 items-center justify-center rounded-full bg-ambar px-5 text-sm font-medium text-tinta transition-colors hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 focus:ring-offset-crema"
         aria-label={linkLabel}
       >
         {linkLabel}
@@ -195,7 +195,7 @@ async function PaymentRegisterPageContent({ serviceId, billId }) {
         description={
           <>
             No existe la cuenta{" "}
-            <span className="font-medium text-zinc-700 dark:text-zinc-200">
+            <span className="font-medium text-tinta ">
               {decodedBillId}
             </span>{" "}
             para este servicio.

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/middleware";
 
 /** Rutas accesibles sin sesión. */
-const PUBLIC_PATHS = ["/login", "/signup", "/auth/callback", "/streaming"];
+const PUBLIC_PATHS = ["/login", "/signup", "/auth/callback"];
 
 /**
  * Si ya hay sesión, estas rutas redirigen al inicio (evita ver login con cuenta activa).

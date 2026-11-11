@@ -114,7 +114,7 @@ function buildConfirmationMessage(params: {
     `Total: $${params.formattedTotal}`,
     "",
     "Gracias por confiar en nosotros.",
-    "DAIEGO Receipts",
+    "Aureo",
   ].join("\n");
 }
 

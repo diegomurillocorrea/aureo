@@ -534,7 +534,7 @@ export function ClientsView({ initialClients, fetchError }) {
   }, []);
 
   const inputClass =
-    "w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+    "w-full rounded-xl border border-marea/20 bg-crema px-3 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50      ";
 
   return (
     <div className={tableViewRootClass}>
@@ -542,10 +542,10 @@ export function ClientsView({ initialClients, fetchError }) {
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span
-              className="h-10 w-1 shrink-0 rounded-full bg-emerald-500"
+              className="h-10 w-1 shrink-0 rounded-full bg-ambar"
               aria-hidden
             />
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tablet:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-tinta tablet:text-3xl">
               Clientes
             </h1>
           </div>
@@ -553,19 +553,19 @@ export function ClientsView({ initialClients, fetchError }) {
             <button
               type="button"
               onClick={openCreate}
-              className="inline-flex h-11 w-fit shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-all duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-emerald-500 dark:hover:bg-emerald-600 dark:focus:ring-offset-zinc-900"
+              className="inline-flex h-11 w-fit shrink-0 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-all duration-200 hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea focus:ring-offset-2"
               aria-label="Agregar cliente"
             >
               Agregar cliente
             </button>
           )}
         </div>
-        <p className="pl-4 text-sm text-zinc-600 dark:text-zinc-400 tablet:text-base">
+        <p className="pl-4 text-sm text-marea tablet:text-base">
           Ver y gestionar clientes. Agregar o editar clientes y asignar servicios.
           {clients.length > 0 ? (
             <>
               {" "}
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">
+              <span className="font-medium text-tinta">
                 {clients.length}{" "}
                 {clients.length === 1 ? "cliente" : "clientes"}
               </span>
@@ -577,7 +577,7 @@ export function ClientsView({ initialClients, fetchError }) {
       {fetchError && (
         <div
           role="alert"
-          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {fetchError}
         </div>
@@ -594,11 +594,11 @@ export function ClientsView({ initialClients, fetchError }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre, apellido o teléfono..."
-            className="w-full rounded-full border border-zinc-300 bg-white pl-10 pr-4 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-500/50 dark:bg-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30"
+            className="w-full rounded-full border border-marea/30 bg-crema pl-10 pr-4 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20"
             aria-label="Buscar clientes por nombre, apellido o teléfono"
           />
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-marea"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -616,7 +616,7 @@ export function ClientsView({ initialClients, fetchError }) {
 
       <div className={tableViewSectionClass}>
         <div className={tableViewSectionTitleClass}>
-          <h2 className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+          <h2 className="text-sm font-semibold text-crema">
             Lista de clientes
           </h2>
         </div>
@@ -624,7 +624,7 @@ export function ClientsView({ initialClients, fetchError }) {
         {clients.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-5 px-4 py-20 text-center">
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-bruma text-tinta"
               aria-hidden
             >
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -636,14 +636,14 @@ export function ClientsView({ initialClients, fetchError }) {
                 />
               </svg>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               Aún no hay clientes. Agrega tu primer cliente para comenzar.
             </p>
             {canCreate && (
             <button
               type="button"
               onClick={openCreate}
-              className="inline-flex h-11 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-all hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+              className="inline-flex h-11 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-all hover:bg-ambar/90"
               aria-label="Agregar cliente"
             >
               Agregar cliente
@@ -652,13 +652,13 @@ export function ClientsView({ initialClients, fetchError }) {
           </div>
         ) : filteredClients.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-5 px-4 py-20 text-center">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               No se encontraron clientes con ese criterio de búsqueda.
             </p>
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-marea/20 bg-crema px-5 text-sm font-medium text-tinta transition-all hover:bg-crema"
               aria-label="Limpiar búsqueda"
             >
               Limpiar búsqueda
@@ -669,24 +669,24 @@ export function ClientsView({ initialClients, fetchError }) {
             {filteredClients.map((client, index) => (
               <li
                 key={client.id}
-                className="flex flex-col gap-2 px-4 py-4 first:pt-4 last:pb-4 transition-colors hover:bg-emerald-50/40 dark:hover:bg-emerald-950/10 tablet:px-6"
+                className="flex flex-col gap-2 px-4 py-4 first:pt-4 last:pb-4 transition-colors hover:bg-bruma/40 tablet:px-6"
               >
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400" aria-hidden>
+                  <span className="text-xs font-medium text-marea" aria-hidden>
                     {index + 1}.
                   </span>
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                  <span className="font-semibold text-tinta">
                     {client.name} {client.last_name}
                   </span>
-                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                  <span className="text-sm text-marea">
                     {formatClientPhoneDisplay(client.phone_number) || "—"}
                   </span>
                   {client.reference && (
-                    <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                    <span className="text-xs text-marea">
                       Ref: {client.reference}
                     </span>
                   )}
-                  <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                  <span className="text-xs text-marea">
                     {formatDateEsSv(client.created_at)}
                   </span>
                 </div>
@@ -706,27 +706,27 @@ export function ClientsView({ initialClients, fetchError }) {
           <div className={tableScrollBodyClass}>
             <table className="w-full text-left text-sm" role="grid">
               <thead className={tableHeadClass}>
-                <tr className="border-b border-zinc-200/80 dark:border-zinc-800">
-                  <th className="w-12 px-2 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-4" scope="col">
+                <tr className="border-b border-bruma">
+                  <th className="w-12 px-2 py-3.5 font-semibold text-tinta tablet:px-4" scope="col">
                     #
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Nombre
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Apellido
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Teléfono
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Referencia
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Creado
                   </th>
                   {(canEdit || canDelete) && (
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Acciones
                   </th>
                   )}
@@ -736,24 +736,24 @@ export function ClientsView({ initialClients, fetchError }) {
                 {filteredClients.map((client, index) => (
                   <tr
                     key={client.id}
-                    className="border-b border-zinc-100 last:border-0 transition-colors hover:bg-emerald-50/40 dark:border-zinc-800 dark:hover:bg-emerald-950/10"
+                    className="border-b border-bruma last:border-0 transition-colors hover:bg-bruma/40"
                   >
-                    <td className="w-12 px-2 py-3.5 text-zinc-500 dark:text-zinc-400 tablet:px-4" aria-label={`Fila ${index + 1}`}>
+                    <td className="w-12 px-2 py-3.5 text-marea tablet:px-4" aria-label={`Fila ${index + 1}`}>
                       {index + 1}
                     </td>
-                    <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-50 tablet:px-6">
+                    <td className="px-4 py-3.5 font-medium text-tinta tablet:px-6">
                       {client.name}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-900 dark:text-zinc-50 tablet:px-6">
+                    <td className="px-4 py-3.5 text-tinta tablet:px-6">
                       {client.last_name}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {formatClientPhoneDisplay(client.phone_number) || "—"}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {client.reference || "—"}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-500 dark:text-zinc-500 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {formatDateEsSv(client.created_at)}
                     </td>
                     {(canEdit || canDelete) && (
@@ -785,10 +785,10 @@ export function ClientsView({ initialClients, fetchError }) {
           aria-labelledby="client-form-title"
         >
           <div
-            className="flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900 max-h-[90dvh] tablet:max-h-none tablet:p-8 p-6"
+            className="flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-marea/20 bg-crema shadow-xl max-h-[90dvh] tablet:max-h-none tablet:p-8 p-6"
             onKeyDown={(e) => e.key === "Escape" && closeForm()}
           >
-            <h2 id="client-form-title" className="shrink-0 text-xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h2 id="client-form-title" className="shrink-0 text-xl font-bold text-tinta">
               {isEditing ? "Editar cliente" : "Agregar cliente"}
             </h2>
             <div className="min-h-0 flex-1 overflow-y-auto mt-6 -mr-2 pr-2 tablet:mr-0 tablet:pr-0">
@@ -800,7 +800,7 @@ export function ClientsView({ initialClients, fetchError }) {
               <div>
                 <label
                   htmlFor="client-name"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Nombre <span className="text-red-500">*</span>
                 </label>
@@ -820,7 +820,7 @@ export function ClientsView({ initialClients, fetchError }) {
               <div>
                 <label
                   htmlFor="client-last-name"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Apellido <span className="text-red-500">*</span>
                 </label>
@@ -843,11 +843,11 @@ export function ClientsView({ initialClients, fetchError }) {
               <div>
                 <label
                   htmlFor="client-phone"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Número de teléfono
                 </label>
-                <div className="flex overflow-hidden rounded-xl border border-zinc-300 bg-white focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 dark:border-zinc-600 dark:bg-zinc-800 dark:focus-within:border-emerald-400 dark:focus-within:ring-emerald-500/30">
+                <div className="flex overflow-hidden rounded-xl border border-marea/20 bg-crema focus-within:border-marea focus-within:ring-2 focus-within:ring-marea/20">
                   <label className="sr-only" htmlFor="client-phone-country">
                     País del teléfono
                   </label>
@@ -863,7 +863,7 @@ export function ClientsView({ initialClients, fetchError }) {
                       }))
                     }
                     disabled={isSubmitting}
-                    className="shrink-0 border-0 border-r border-zinc-300 bg-zinc-50 px-2 py-2.5 text-sm font-medium text-zinc-700 focus:outline-none focus:ring-0 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-200"
+                    className="shrink-0 border-0 border-r border-bruma bg-crema px-2 py-2.5 text-sm font-medium text-tinta focus:outline-none focus:ring-0 disabled:opacity-50"
                   >
                     {CLIENT_PHONE_COUNTRIES.map((country) => (
                       <option key={country.code} value={country.code}>
@@ -872,7 +872,7 @@ export function ClientsView({ initialClients, fetchError }) {
                     ))}
                   </select>
                   <span
-                    className="flex shrink-0 items-center border-r border-zinc-300 bg-zinc-50 px-3 text-sm font-medium text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-300"
+                    className="flex shrink-0 items-center border-r border-bruma bg-crema px-3 text-sm font-medium text-marea"
                     aria-hidden
                   >
                     +
@@ -901,7 +901,7 @@ export function ClientsView({ initialClients, fetchError }) {
                       }));
                     }}
                     disabled={isSubmitting}
-                    className="w-full border-0 bg-transparent px-4 py-2.5 text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-0 disabled:opacity-50 dark:text-zinc-100 dark:placeholder-zinc-500"
+                    className="w-full border-0 bg-transparent px-4 py-2.5 text-tinta placeholder-marea/60 focus:outline-none focus:ring-0 disabled:opacity-50"
                     aria-label="Número de teléfono"
                   />
                 </div>
@@ -909,7 +909,7 @@ export function ClientsView({ initialClients, fetchError }) {
               <div>
                 <label
                   htmlFor="client-reference"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Referencia
                 </label>
@@ -929,16 +929,16 @@ export function ClientsView({ initialClients, fetchError }) {
               </div>
               </div>
 
-              <div className="border-t border-zinc-200/80 pt-5 dark:border-zinc-700">
+              <div className="border-t border-bruma pt-5">
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                  <h3 className="text-sm font-semibold text-tinta">
                     Servicios
                   </h3>
                   {!adderOpen && servicesList.length > 0 && (
                     <button
                       type="button"
                       onClick={handleOpenAdder}
-                      className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-2 text-xs font-medium text-white transition-all hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-ambar px-3 py-2 text-xs font-medium text-tinta transition-all hover:bg-ambar/90"
                       aria-label="Agregar servicio"
                     >
                       <svg
@@ -959,18 +959,18 @@ export function ClientsView({ initialClients, fetchError }) {
                     </button>
                   )}
                 </div>
-                <p className="mb-4 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mb-4 text-xs text-marea">
                   {isEditing
                     ? "Vincular o desvincular servicios. Puedes agregar múltiples cuentas por servicio (ej. dos cuentas de Claro con diferentes números de cuenta/recibo)."
                     : "Agrega servicios que se vincularán automáticamente al crear el cliente."}
                 </p>
 
                 {servicesLoading ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm text-marea">
                     Cargando servicios…
                   </p>
                 ) : servicesList.length === 0 ? (
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm text-marea">
                     Aún no hay servicios definidos. Agrega servicios en la
                     sección de Servicios primero.
                   </p>
@@ -984,18 +984,18 @@ export function ClientsView({ initialClients, fetchError }) {
                           return (
                             <li
                               key={item.id}
-                              className="flex flex-col gap-3 rounded-xl border border-zinc-200/80 bg-zinc-50/50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800/50 sm:flex-row sm:items-center sm:justify-between"
+                              className="flex flex-col gap-3 rounded-xl border border-marea/30 bg-crema/50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                             >
                               <div className="flex min-w-0 items-center gap-3">
                                 {serviceImageUrlById[item.serviceId] ? (
                                   <img
                                     src={serviceImageUrlById[item.serviceId]}
                                     alt={`Imagen de ${serviceNameById[item.serviceId] ?? "servicio"}`}
-                                    className="h-10 w-10 shrink-0 rounded-lg border border-zinc-200 object-cover dark:border-zinc-700"
+                                    className="h-10 w-10 shrink-0 rounded-lg border border-bruma object-cover"
                                   />
                                 ) : (
                                   <div
-                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-zinc-300 text-zinc-400 dark:border-zinc-700 dark:text-zinc-600"
+                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-bruma text-marea"
                                     aria-hidden
                                   >
                                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1004,7 +1004,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                   </div>
                                 )}
                                 <div className="flex min-w-0 flex-1 flex-col">
-                                  <span className="truncate font-medium text-zinc-900 dark:text-zinc-50">
+                                  <span className="truncate font-medium text-tinta">
                                     {serviceNameById[item.serviceId] ?? "Servicio"}
                                   </span>
                                   {isRowEditing ? (
@@ -1021,19 +1021,19 @@ export function ClientsView({ initialClients, fetchError }) {
                                           if (e.key === "Escape") handleCancelEdit();
                                         }}
                                         disabled={isSavingEdit}
-                                        className="mt-1 w-full rounded-lg border border-zinc-300 bg-white px-2 py-1 text-sm text-zinc-900 placeholder-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+                                        className="mt-1 w-full rounded-lg border border-marea/20 bg-crema px-2 py-1 text-sm text-tinta placeholder-marea/60 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50"
                                         placeholder="Número de cuenta/recibo"
                                         aria-label="Editar número de cuenta/recibo"
                                         autoFocus
                                       />
                                       {editingError && (
-                                        <span className="mt-1 text-xs text-red-600 dark:text-red-400">
+                                        <span className="mt-1 text-xs text-red-600">
                                           {editingError}
                                         </span>
                                       )}
                                     </>
                                   ) : (
-                                    <span className="truncate text-xs text-zinc-600 dark:text-zinc-400">
+                                    <span className="truncate text-xs text-marea">
                                       {item.accountNumber}
                                     </span>
                                   )}
@@ -1046,7 +1046,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                       type="button"
                                       onClick={() => handleSaveEdit(item)}
                                       disabled={isSavingEdit}
-                                      className="text-xs font-medium text-emerald-600 hover:underline disabled:opacity-50 dark:text-emerald-400"
+                                      className="text-xs font-medium text-marea hover:underline disabled:opacity-50"
                                       aria-label={`Guardar ${item.accountNumber}`}
                                     >
                                       {isSavingEdit ? "…" : "Guardar"}
@@ -1055,7 +1055,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                       type="button"
                                       onClick={handleCancelEdit}
                                       disabled={isSavingEdit}
-                                      className="text-xs font-medium text-zinc-500 hover:underline disabled:opacity-50 dark:text-zinc-400"
+                                      className="text-xs font-medium text-marea hover:underline disabled:opacity-50"
                                       aria-label="Cancelar edición"
                                     >
                                       Cancelar
@@ -1068,7 +1068,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                         type="button"
                                         onClick={() => handleOpenReassign(item)}
                                         disabled={isUnlinking}
-                                        className="text-xs font-medium text-emerald-600 hover:underline disabled:opacity-50 dark:text-emerald-400"
+                                        className="text-xs font-medium text-marea hover:underline disabled:opacity-50"
                                         aria-label={`Reasignar ${item.accountNumber} a otro cliente`}
                                       >
                                         Reasignar
@@ -1109,19 +1109,19 @@ export function ClientsView({ initialClients, fetchError }) {
                       </ul>
                     ) : (
                       !adderOpen && (
-                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                        <p className="text-sm text-marea">
                           Aún no hay servicios vinculados. Usa el botón “Agregar”.
                         </p>
                       )
                     )}
 
                     {adderOpen && (
-                      <div className="mt-3 flex flex-col gap-3 rounded-xl border border-emerald-300/70 bg-emerald-50/40 p-4 dark:border-emerald-500/40 dark:bg-emerald-950/20">
+                      <div className="mt-3 flex flex-col gap-3 rounded-xl border border-marea/70 bg-bruma/40 p-4">
                         {adderStep === "select" ? (
                           <>
                             <label
                               htmlFor="adder-service"
-                              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                              className="block text-sm font-medium text-tinta"
                             >
                               Servicio
                             </label>
@@ -1142,7 +1142,7 @@ export function ClientsView({ initialClients, fetchError }) {
                               <button
                                 type="button"
                                 onClick={resetAdder}
-                                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-2.5 text-sm font-medium text-tinta transition-all hover:bg-crema"
                                 aria-label="Cancelar"
                               >
                                 Cancelar
@@ -1151,7 +1151,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                 type="button"
                                 onClick={handleAdderAccept}
                                 disabled={!adderServiceId}
-                                className="flex-1 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-emerald-700 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                                className="flex-1 rounded-xl bg-ambar px-4 py-2.5 text-sm font-medium text-tinta transition-all hover:bg-ambar/90 disabled:opacity-50"
                                 aria-label="Aceptar servicio"
                               >
                                 Aceptar
@@ -1162,7 +1162,7 @@ export function ClientsView({ initialClients, fetchError }) {
                           <>
                             <label
                               htmlFor="adder-value"
-                              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                              className="block text-sm font-medium text-tinta"
                             >
                               {serviceNameById[adderServiceId] ?? "Servicio"} ·
                               Número de cuenta/recibo
@@ -1189,7 +1189,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                 type="button"
                                 onClick={() => setAdderStep("select")}
                                 disabled={isLinking}
-                                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-2.5 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                                 aria-label="Volver"
                               >
                                 Atrás
@@ -1198,7 +1198,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                 type="button"
                                 onClick={handleAdderSave}
                                 disabled={isLinking || !adderValue.trim()}
-                                className="flex-1 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition-all hover:bg-emerald-700 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                                className="flex-1 rounded-xl bg-ambar px-4 py-2.5 text-sm font-medium text-tinta transition-all hover:bg-ambar/90 disabled:opacity-50"
                                 aria-label="Guardar servicio"
                               >
                                 {isLinking ? "Guardando…" : "Guardar"}
@@ -1214,7 +1214,7 @@ export function ClientsView({ initialClients, fetchError }) {
                 {linkError && (
                   <div
                     role="alert"
-                    className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                    className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
                   >
                     {linkError}
                   </div>
@@ -1224,7 +1224,7 @@ export function ClientsView({ initialClients, fetchError }) {
               {formError && (
                 <div
                   role="alert"
-                  className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                  className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
                 >
                   {formError}
                 </div>
@@ -1234,7 +1234,7 @@ export function ClientsView({ initialClients, fetchError }) {
                   type="button"
                   onClick={closeForm}
                   disabled={isSubmitting}
-                  className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                   aria-label="Cancelar"
                 >
                   Cancelar
@@ -1242,7 +1242,7 @@ export function ClientsView({ initialClients, fetchError }) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600 dark:focus:ring-offset-zinc-900"
+                  className="flex-1 rounded-xl bg-ambar px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea focus:ring-offset-2 disabled:opacity-50"
                   aria-busy={isSubmitting}
                   aria-label={isEditing ? "Guardar cambios" : "Crear cliente"}
                 >
@@ -1268,11 +1268,11 @@ export function ClientsView({ initialClients, fetchError }) {
           aria-labelledby="delete-dialog-title"
           aria-describedby="delete-dialog-desc"
         >
-          <div className="w-full max-w-sm rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 id="delete-dialog-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+          <div className="w-full max-w-sm rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl">
+            <h2 id="delete-dialog-title" className="text-xl font-bold text-tinta">
               Eliminar cliente
             </h2>
-            <p id="delete-dialog-desc" className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p id="delete-dialog-desc" className="mt-2 text-sm text-marea">
               ¿Estás seguro de que deseas eliminar a{" "}
               <strong>
                 {deleteTarget.name} {deleteTarget.last_name}
@@ -1282,7 +1282,7 @@ export function ClientsView({ initialClients, fetchError }) {
             {deleteError && (
               <div
                 role="alert"
-                className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
               >
                 {deleteError}
               </div>
@@ -1292,7 +1292,7 @@ export function ClientsView({ initialClients, fetchError }) {
                 type="button"
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
-                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                 aria-label="Cancelar"
               >
                 Cancelar
@@ -1301,7 +1301,7 @@ export function ClientsView({ initialClients, fetchError }) {
                 type="button"
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-zinc-900"
+                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
                 aria-busy={isDeleting}
                 aria-label="Eliminar cliente"
               >
@@ -1322,30 +1322,30 @@ export function ClientsView({ initialClients, fetchError }) {
           aria-describedby="reassign-dialog-desc"
         >
           <div
-            className="flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900 max-h-[90dvh]"
+            className="flex w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-marea/20 bg-crema shadow-xl max-h-[90dvh]"
             onKeyDown={(e) => e.key === "Escape" && !isReassigning && handleCloseReassign()}
           >
-            <div className="shrink-0 border-b border-zinc-200/80 px-6 py-5 dark:border-zinc-800">
+            <div className="shrink-0 border-b border-bruma px-6 py-5">
               <h2
                 id="reassign-dialog-title"
-                className="text-xl font-bold text-zinc-900 dark:text-zinc-50"
+                className="text-xl font-bold text-tinta"
               >
                 Reasignar servicio
               </h2>
               <p
                 id="reassign-dialog-desc"
-                className="mt-2 text-sm text-zinc-600 dark:text-zinc-400"
+                className="mt-2 text-sm text-marea"
               >
                 Busca el cliente al que pertenecerá ahora este número de servicio.
               </p>
-              <div className="mt-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800/50">
-                <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              <div className="mt-4 rounded-xl border border-marea/30 bg-crema/60 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-marea">
                   Servicio a reasignar
                 </p>
-                <p className="mt-1 font-semibold text-zinc-900 dark:text-zinc-50">
+                <p className="mt-1 font-semibold text-tinta">
                   {serviceNameById[reassignTarget.serviceId] ?? "Servicio"}
                 </p>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm text-marea">
                   {reassignTarget.accountNumber}
                 </p>
               </div>
@@ -1354,7 +1354,7 @@ export function ClientsView({ initialClients, fetchError }) {
             <div className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
               <label
                 htmlFor="reassign-client-search"
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Buscar cliente
               </label>
@@ -1373,29 +1373,29 @@ export function ClientsView({ initialClients, fetchError }) {
               />
 
               <div
-                className="mt-4 overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900"
+                className="mt-4 overflow-hidden rounded-xl border border-marea/20 bg-crema"
                 role="region"
                 aria-label="Resultados de búsqueda de clientes"
                 aria-live="polite"
               >
                 {isReassigning ? (
-                  <p className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="px-4 py-6 text-center text-sm text-marea">
                     Reasignando servicio…
                   </p>
                 ) : trimmedReassignSearchQuery.length < MIN_CLIENT_SEARCH_LENGTH ? (
-                  <p className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="px-4 py-6 text-center text-sm text-marea">
                     Escribe al menos {MIN_CLIENT_SEARCH_LENGTH} caracteres para buscar
                   </p>
                 ) : isReassignSearchLoading ? (
-                  <p className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="px-4 py-6 text-center text-sm text-marea">
                     Buscando clientes…
                   </p>
                 ) : filteredReassignResults.length === 0 ? (
-                  <p className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+                  <p className="px-4 py-6 text-center text-sm text-marea">
                     No se encontraron otros clientes
                   </p>
                 ) : (
-                  <ul className="max-h-[min(40vh,18rem)] divide-y divide-zinc-100 overflow-y-auto p-1 dark:divide-zinc-800">
+                  <ul className="max-h-[min(40vh,18rem)] divide-y divide-bruma overflow-y-auto p-1">
                     {filteredReassignResults.map((client) => {
                       const fullName = getClientFullName(client);
                       const phone = formatClientPhoneDisplay(client.phone_number);
@@ -1406,16 +1406,16 @@ export function ClientsView({ initialClients, fetchError }) {
                           <button
                             type="button"
                             onClick={() => handleSelectClientForReassign(client)}
-                            className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 ${
-                              reassignSelectedClientId === client.id
-                                ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200"
-                                : "text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800/80"
-                            }`}
+                            className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 focus-visible:ring-offset-2 ${
+ reassignSelectedClientId === client.id
+ ? "bg-bruma text-tinta "
+ : "text-tinta hover:bg-bruma "
+ }`}
                             aria-label={`Reasignar servicio a ${label}`}
                             aria-pressed={reassignSelectedClientId === client.id}
                           >
                             <span
-                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-100 text-sm font-semibold text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-bruma bg-bruma text-sm font-semibold text-marea"
                               aria-hidden
                             >
                               {(client.name ?? "?").charAt(0).toUpperCase()}
@@ -1425,7 +1425,7 @@ export function ClientsView({ initialClients, fetchError }) {
                                 {fullName}
                               </span>
                               {phone ? (
-                                <span className="block truncate text-xs text-zinc-500 dark:text-zinc-400">
+                                <span className="block truncate text-xs text-marea">
                                   {phone}
                                 </span>
                               ) : null}
@@ -1441,19 +1441,19 @@ export function ClientsView({ initialClients, fetchError }) {
               {reassignError ? (
                 <div
                   role="alert"
-                  className="mt-4 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                  className="mt-4 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
                 >
                   {reassignError}
                 </div>
               ) : null}
             </div>
 
-            <div className="shrink-0 border-t border-zinc-200/80 px-6 py-4 dark:border-zinc-800">
+            <div className="shrink-0 border-t border-bruma px-6 py-4">
               <button
                 type="button"
                 onClick={handleCloseReassign}
                 disabled={isReassigning}
-                className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="w-full rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                 aria-label="Cancelar reasignación"
               >
                 Cancelar
@@ -1472,11 +1472,11 @@ export function ClientsView({ initialClients, fetchError }) {
           aria-labelledby="duplicate-dialog-title"
           aria-describedby="duplicate-dialog-desc"
         >
-          <div className="w-full max-w-sm rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="w-full max-w-sm rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl">
             <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100">
                 <svg
-                  className="h-5 w-5 text-amber-600 dark:text-amber-400"
+                  className="h-5 w-5 text-amber-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1493,16 +1493,16 @@ export function ClientsView({ initialClients, fetchError }) {
               <div className="min-w-0">
                 <h2
                   id="duplicate-dialog-title"
-                  className="text-xl font-bold text-zinc-900 dark:text-zinc-50"
+                  className="text-xl font-bold text-tinta"
                 >
                   Número de teléfono duplicado
                 </h2>
                 <p
                   id="duplicate-dialog-desc"
-                  className="mt-2 text-sm text-zinc-600 dark:text-zinc-400"
+                  className="mt-2 text-sm text-marea"
                 >
                   Ya existe un contacto registrado con el número{" "}
-                  <strong className="text-zinc-900 dark:text-zinc-50">
+                  <strong className="text-tinta">
                     {formatClientPhoneDisplay(duplicateClient.phone_number)}
                   </strong>
                   .
@@ -1510,18 +1510,18 @@ export function ClientsView({ initialClients, fetchError }) {
               </div>
             </div>
 
-            <div className="mt-4 rounded-xl border border-zinc-200/80 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-800/50">
-              <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <div className="mt-4 rounded-xl border border-marea/30 bg-crema/60 p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-marea">
                 Contacto existente
               </p>
-              <p className="mt-1.5 font-semibold text-zinc-900 dark:text-zinc-50">
+              <p className="mt-1.5 font-semibold text-tinta">
                 {duplicateClient.name} {duplicateClient.last_name}
               </p>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              <p className="text-sm text-marea">
                 {formatClientPhoneDisplay(duplicateClient.phone_number) || "—"}
               </p>
               {duplicateClient.reference && (
-                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-500">
+                <p className="mt-0.5 text-xs text-marea">
                   Ref: {duplicateClient.reference}
                 </p>
               )}
@@ -1531,7 +1531,7 @@ export function ClientsView({ initialClients, fetchError }) {
               <button
                 type="button"
                 onClick={() => setDuplicateClient(null)}
-                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema"
                 aria-label="Cerrar y corregir el número"
               >
                 Corregir número
@@ -1543,7 +1543,7 @@ export function ClientsView({ initialClients, fetchError }) {
                   setDuplicateClient(null);
                   openEdit(target);
                 }}
-                className="flex-1 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-emerald-500 dark:hover:bg-emerald-600 dark:focus:ring-offset-zinc-900"
+                className="flex-1 rounded-xl bg-ambar px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea focus:ring-offset-2"
                 aria-label="Ver el contacto existente"
               >
                 Ver contacto

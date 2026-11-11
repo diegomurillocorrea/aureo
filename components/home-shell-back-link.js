@@ -23,6 +23,9 @@ function BackChevron() {
   );
 }
 
+const backLinkClassName =
+  "inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 focus:ring-offset-crema";
+
 export function HomeShellBackLink() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -36,7 +39,7 @@ export function HomeShellBackLink() {
     return (
       <Link
         href="/"
-        className="inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-950"
+        className={backLinkClassName}
         aria-label="Volver a servicios"
       >
         <BackChevron />
@@ -55,7 +58,7 @@ export function HomeShellBackLink() {
     return (
       <Link
         href={href}
-        className="inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-950"
+        className={backLinkClassName}
         aria-label={ariaLabel}
       >
         <BackChevron />

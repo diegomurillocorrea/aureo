@@ -4,7 +4,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Check, Copy, Eye, FileX, Pencil, Upload, X } from "lucide-react";
-import { DaiegoLogo } from "@/components/daiego-logo";
+import { AureoIsotipo } from "@/components/aureo-isotipo";
 import { ServiceLogoLink } from "@/components/service-logo-link";
 import {
   dateInputToIsoWithCurrentTimeEsSv,
@@ -26,7 +26,7 @@ import { usePermissions } from "../../permissions-provider";
 import { useIsMobile } from "@/hooks/use-breakpoint";
 
 const inputClassName =
-  "w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+  "w-full rounded-xl border border-marea/20 bg-crema px-4 py-3 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50      ";
 
 const ALLOWED_PROOF_TYPES = [
   "image/jpeg",
@@ -96,7 +96,7 @@ function hasStoredProof(payment) {
 function ServicePlaceholder({ className = "h-full w-full" }) {
   return (
     <div
-      className={`flex items-center justify-center bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 ${className}`}
+      className={`flex items-center justify-center bg-bruma text-marea ${className}`}
       aria-hidden
     >
       <svg
@@ -137,12 +137,12 @@ function CopyServiceNumberButton({ value }) {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50"
       aria-label={label}
       title={label}
     >
       {isCopied ? (
-        <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
+        <Check className="h-4 w-4 text-marea" aria-hidden />
       ) : (
         <Copy className="h-4 w-4" aria-hidden />
       )}
@@ -500,7 +500,7 @@ export function PaymentEditView({
             <div>
               <label
                 htmlFor={amountId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Monto
               </label>
@@ -524,7 +524,7 @@ export function PaymentEditView({
               <div className="mb-1.5 flex items-center justify-between gap-2">
                 <label
                   htmlFor={commissionId}
-                  className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="block text-sm font-medium text-tinta"
                 >
                   Comisión
                 </label>
@@ -536,17 +536,17 @@ export function PaymentEditView({
                   aria-label="Activar o desactivar comisión"
                   onClick={handleCommissionSwitchToggle}
                   disabled={!canInteract}
-                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-zinc-950 ${
-                    isCommissionEnabled
-                      ? "bg-emerald-600"
-                      : "bg-zinc-300 dark:bg-zinc-600"
-                  }`}
+                  className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+ isCommissionEnabled
+ ? "bg-ambar"
+ : "bg-bruma "
+ }`}
                 >
                   <span
                     aria-hidden
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                      isCommissionEnabled ? "translate-x-6" : "translate-x-1"
-                    }`}
+                    className={`inline-block h-4 w-4 transform rounded-full bg-crema shadow transition-transform ${
+ isCommissionEnabled ? "translate-x-6" : "translate-x-1"
+ }`}
                   />
                 </button>
               </div>
@@ -570,7 +570,7 @@ export function PaymentEditView({
             <div>
               <label
                 htmlFor={methodId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Método de pago
               </label>
@@ -597,7 +597,7 @@ export function PaymentEditView({
             <div>
               <label
                 htmlFor={proofId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Comprobante
               </label>
@@ -624,7 +624,7 @@ export function PaymentEditView({
                         type="button"
                         onClick={handleClearPendingProof}
                         disabled={isBusy}
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-200 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-zinc-50"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus:ring-2 focus:ring-marea/50"
                         aria-label="Quitar archivo seleccionado"
                       >
                         <svg
@@ -649,7 +649,7 @@ export function PaymentEditView({
                         type="button"
                         onClick={() => proofInputRef.current?.click()}
                         disabled={!canInteract}
-                        className={`${inputClassName} flex flex-1 items-center justify-center gap-2 text-sm font-medium text-zinc-600 hover:border-emerald-500 hover:text-zinc-900 dark:text-zinc-300 dark:hover:border-emerald-400 dark:hover:text-zinc-50`}
+                        className={`${inputClassName} flex flex-1 items-center justify-center gap-2 text-sm font-medium text-marea hover:border-marea hover:text-tinta `}
                         aria-label="Adjuntar comprobante"
                       >
                         <Upload className="h-4 w-4 shrink-0" aria-hidden />
@@ -661,7 +661,7 @@ export function PaymentEditView({
                             type="button"
                             onClick={handleViewProof}
                             disabled={isBusy}
-                            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-zinc-300 text-zinc-600 transition-colors hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-bruma text-marea transition-colors hover:bg-bruma focus:outline-none focus:ring-2 focus:ring-marea/50"
                             aria-label="Ver comprobante"
                           >
                             <Eye className="h-4 w-4" aria-hidden />
@@ -670,7 +670,7 @@ export function PaymentEditView({
                             type="button"
                             onClick={handleRemoveProof}
                             disabled={isBusy}
-                            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-zinc-300 text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 dark:border-zinc-600 dark:text-red-400 dark:hover:bg-red-950/40"
+                            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-bruma text-red-600 transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-marea/50"
                             aria-label="Eliminar comprobante"
                           >
                             <FileX className="h-4 w-4" aria-hidden />
@@ -682,7 +682,7 @@ export function PaymentEditView({
                 </div>
               ) : (
                 <div
-                  className={`${inputClassName} flex items-center justify-center text-sm text-zinc-400 dark:text-zinc-500`}
+                  className={`${inputClassName} flex items-center justify-center text-sm text-marea `}
                   role="status"
                   aria-label="Sin permiso para gestionar comprobante"
                 >
@@ -696,7 +696,7 @@ export function PaymentEditView({
             <div>
               <label
                 htmlFor={dateId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Fecha de pago
               </label>
@@ -713,7 +713,7 @@ export function PaymentEditView({
             <div>
               <label
                 htmlFor={statusId}
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Estado
               </label>
@@ -737,7 +737,7 @@ export function PaymentEditView({
           {formError ? (
             <p
               id="payment-edit-error"
-              className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/50 dark:text-red-300"
+              className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
               role="alert"
             >
               {formError}
@@ -753,11 +753,11 @@ export function PaymentEditView({
           aria-modal="true"
           aria-label="Vista previa del comprobante"
         >
-          <div className="relative flex max-h-[90vh] max-w-[90vw] flex-col items-center justify-center rounded-xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-700 dark:bg-zinc-900">
+          <div className="relative flex max-h-[90vh] max-w-[90vw] flex-col items-center justify-center rounded-xl border border-marea/20 bg-crema p-6 shadow-xl">
             <button
               type="button"
               onClick={handleCloseProofPreview}
-              className="absolute -right-2 -top-2 z-10 rounded-full bg-zinc-800 p-2 text-white shadow-lg hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="absolute -right-2 -top-2 z-10 rounded-full bg-tinta p-2 text-white shadow-lg hover:bg-tinta focus:outline-none focus:ring-2 focus:ring-marea"
               aria-label="Cerrar"
             >
               <svg
@@ -777,7 +777,7 @@ export function PaymentEditView({
             </button>
             {proofPreviewLoading ? (
               <p
-                className="py-8 text-sm text-zinc-500 dark:text-zinc-400"
+                className="py-8 text-sm text-marea"
                 aria-live="polite"
               >
                 Cargando imagen…
@@ -787,7 +787,7 @@ export function PaymentEditView({
               <img
                 src={proofPreviewUrl}
                 alt="Comprobante de pago"
-                className="max-h-[85vh] max-w-full rounded-lg border border-zinc-200 object-contain dark:border-zinc-600"
+                className="max-h-[85vh] max-w-full rounded-lg border border-bruma object-contain"
               />
             ) : null}
           </div>
@@ -819,25 +819,25 @@ export function PaymentEditView({
               onClose();
             }}
           />
-          <div className="relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-xl dark:border-zinc-800 dark:bg-zinc-900 max-h-[90dvh] p-6 tablet:p-8">
+          <div className="relative z-10 flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-marea/20 bg-crema shadow-xl max-h-[90dvh] p-6 tablet:p-8">
             <div className="flex shrink-0 items-start justify-between gap-3">
               <div className="min-w-0">
                 <h2
                   id={titleId}
-                  className="text-xl font-bold text-zinc-900 dark:text-zinc-50"
+                  className="text-xl font-bold text-tinta"
                 >
                   Editar pago
                 </h2>
-                <div className="mt-3 flex flex-wrap items-center gap-2 text-base text-zinc-700 dark:text-zinc-300 sm:text-lg">
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-base text-tinta sm:text-lg">
+                  <span className="font-semibold text-tinta">
                     {clientLabel}
                   </span>
                   {accountNumber ? (
                     <>
-                      <span aria-hidden className="text-zinc-400 dark:text-zinc-500">
+                      <span aria-hidden className="text-marea">
                         ·
                       </span>
-                      <span className="inline-flex items-center gap-1.5 font-medium text-zinc-800 dark:text-zinc-100">
+                      <span className="inline-flex items-center gap-1.5 font-medium text-tinta">
                         <span>{accountNumber}</span>
                         <CopyServiceNumberButton value={accountNumber} />
                       </span>
@@ -845,10 +845,10 @@ export function PaymentEditView({
                   ) : null}
                   {serviceName ? (
                     <>
-                      <span aria-hidden className="text-zinc-400 dark:text-zinc-500">
+                      <span aria-hidden className="text-marea">
                         ·
                       </span>
-                      <span className="font-medium text-zinc-800 dark:text-zinc-100">
+                      <span className="font-medium text-tinta">
                         {serviceName}
                       </span>
                     </>
@@ -856,7 +856,7 @@ export function PaymentEditView({
                   {changeClientHref ? (
                     <Link
                       href={changeClientHref}
-                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sky-500 transition-colors hover:bg-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 dark:text-sky-400 dark:hover:bg-sky-900/40"
+                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-marea transition-colors hover:bg-bruma focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50"
                       aria-label="Cambiar cliente de este pago"
                       title="Cambiar cliente"
                     >
@@ -872,7 +872,7 @@ export function PaymentEditView({
                   onClose();
                 }}
                 disabled={!canDismissModal}
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Cerrar"
               >
                 <X className="h-4 w-4" aria-hidden />
@@ -895,14 +895,14 @@ export function PaymentEditView({
                       onClose();
                     }}
                     disabled={!canDismissModal}
-                    className="inline-flex h-12 items-center justify-center rounded-xl border border-zinc-300 px-5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    className="inline-flex h-12 items-center justify-center rounded-xl border border-bruma px-5 text-sm font-medium text-tinta transition-colors hover:bg-bruma focus:outline-none focus:ring-2 focus:ring-marea/50 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
                     disabled={!canInteract}
-                    className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-zinc-950"
+                    className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-ambar px-6 text-sm font-semibold text-tinta transition-colors hover:bg-ambar focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                     aria-busy={isSubmitting}
                   >
                     {isSubmitting ? "Actualizando…" : "Actualizar datos"}
@@ -923,10 +923,10 @@ export function PaymentEditView({
         <div
           className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4"
           role="group"
-          aria-label={`DAIEGO y ${serviceName}`}
+          aria-label={`Aureo y ${serviceName}`}
         >
-          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200/80 bg-white p-2.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 tablet:h-36 tablet:w-36 tablet:p-3">
-            <DaiegoLogo
+          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-marea/20 bg-crema p-2.5 shadow-sm tablet:h-36 tablet:w-36 tablet:p-3">
+            <AureoIsotipo
               width={144}
               height={144}
               priority
@@ -949,7 +949,7 @@ export function PaymentEditView({
         <div
           className={`mb-6 flex w-full items-center justify-center gap-1.5 ${isMobile ? "flex-col" : "flex-row"}`}
         >
-          <h2 className="text-center text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+          <h2 className="text-center text-xl font-semibold tracking-tight text-tinta sm:text-2xl">
             {isMobile ? (
               <span className="flex flex-col items-center">
                 <span>{clientLabel}</span>
@@ -976,7 +976,7 @@ export function PaymentEditView({
           {changeClientHref ? (
             <Link
               href={changeClientHref}
-              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sky-500 transition-colors hover:bg-sky-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 dark:text-sky-400 dark:hover:bg-sky-900/40"
+              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-marea transition-colors hover:bg-bruma focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50"
               aria-label="Cambiar cliente de este pago"
               title="Cambiar cliente"
             >
@@ -996,7 +996,7 @@ export function PaymentEditView({
             <button
               type="submit"
               disabled={!canInteract}
-              className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-emerald-600 px-6 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:focus:ring-offset-zinc-950"
+              className="inline-flex h-12 min-w-[10rem] items-center justify-center rounded-xl bg-ambar px-6 text-sm font-semibold text-tinta transition-colors hover:bg-ambar focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
               aria-busy={isSubmitting}
             >
               {isSubmitting ? "Actualizando…" : "Actualizar datos"}
@@ -1018,19 +1018,19 @@ export function PaymentEditViewSkeleton() {
     >
       <p className="sr-only">Cargando edición de pago…</p>
       <div className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4">
-        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:h-36 tablet:w-36" />
-        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:h-36 tablet:w-36" />
+        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-bruma tablet:h-36 tablet:w-36" />
+        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-bruma tablet:h-36 tablet:w-36" />
       </div>
-      <div className="mb-6 h-6 w-56 max-w-full animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
+      <div className="mb-6 h-6 w-56 max-w-full animate-pulse rounded-lg bg-bruma" />
       <div className="grid w-full grid-cols-2 gap-3">
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-        <div className="h-12 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
+        <div className="h-12 animate-pulse rounded-xl bg-bruma" />
       </div>
-      <div className="mt-6 h-12 w-44 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+      <div className="mt-6 h-12 w-44 animate-pulse rounded-xl bg-bruma" />
     </div>
   );
 }

@@ -10,8 +10,8 @@ export const metadata = {
 function PaymentsViewFallback() {
   return (
     <div className="space-y-6 tablet:space-y-8" aria-busy="true" aria-label="Cargando pagos">
-      <div className="h-10 w-40 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-      <div className="h-64 animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800" />
+      <div className="h-10 w-40 animate-pulse rounded-xl bg-bruma " />
+      <div className="h-64 animate-pulse rounded-2xl bg-bruma " />
     </div>
   );
 }

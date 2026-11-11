@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { DaiegoLogo } from "@/components/daiego-logo";
-import { DaiegoLogoMark } from "@/components/daiego-logo-mark";
+import { AureoIsotipo } from "@/components/aureo-isotipo";
 import { ServiceLogoLink } from "@/components/service-logo-link";
 import { formatClientPhoneDisplay } from "@/lib/phone";
 import { resolveSafePaymentsReturnTo } from "@/lib/safe-payments-return-to";
@@ -19,7 +18,7 @@ const SEARCH_DEBOUNCE_MS = 300;
 const MIN_SEARCH_LENGTH = 2;
 
 const inputClassName =
-  "w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+  "w-full rounded-xl border border-marea/20 bg-crema px-4 py-3 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50      ";
 
 function getServiceImageUrl(service) {
   if (!service?.image_bucket || !service?.image_path) return null;
@@ -45,7 +44,7 @@ function getReceiptResultLabel(receipt) {
 function ServicePlaceholder({ className = "h-full w-full" }) {
   return (
     <div
-      className={`flex items-center justify-center bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500 ${className}`}
+      className={`flex items-center justify-center bg-bruma text-marea ${className}`}
       aria-hidden
     >
       <svg
@@ -73,11 +72,11 @@ function ServiceTile({ service }) {
     <li className="min-w-0">
       <Link
         href={`/${service.id}`}
-        className="group flex w-full flex-col items-center gap-1.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-950"
+        className="group flex w-full flex-col items-center gap-1.5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 focus-visible:ring-offset-2"
         aria-label={`Buscar cuentas de ${name}`}
       >
         <div
-          className="aspect-square w-full overflow-hidden rounded-xl border border-zinc-200 bg-white transition-colors duration-200 group-hover:border-emerald-500 group-focus-visible:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-900 dark:group-hover:border-emerald-500"
+          className="aspect-square w-full overflow-hidden rounded-xl border border-marea/20 bg-crema transition-colors duration-200 group-hover:border-marea group-focus-visible:border-marea"
           title={name}
         >
           {imageUrl ? (
@@ -91,7 +90,7 @@ function ServiceTile({ service }) {
             <ServicePlaceholder />
           )}
         </div>
-        <span className="line-clamp-2 w-full text-center text-[11px] font-medium leading-snug text-zinc-700 transition-colors group-hover:text-emerald-700 dark:text-zinc-300 dark:group-hover:text-emerald-400 tablet:text-xs">
+        <span className="line-clamp-2 w-full text-center text-[11px] font-medium leading-snug text-tinta transition-colors group-hover:text-tinta tablet:text-xs">
           {name}
         </span>
       </Link>
@@ -118,15 +117,15 @@ function SearchResultRow({
       <button
         type="button"
         onClick={() => onSelect(receipt)}
-        className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 ${
-          isSelected
-            ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200"
-            : "text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800/80"
-        }`}
+        className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 focus-visible:ring-offset-2 ${
+ isSelected
+ ? "bg-bruma text-tinta "
+ : "text-tinta hover:bg-bruma "
+ }`}
         aria-label={`Cuenta ${label}`}
         aria-pressed={isSelected}
       >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-800">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-marea/30 bg-crema">
           {imageUrl ? (
             <img
               src={imageUrl}
@@ -160,16 +159,16 @@ function ClientSearchResultRow({ client, isSelected, onSelect }) {
       <button
         type="button"
         onClick={() => onSelect(client)}
-        className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-zinc-900 ${
-          isSelected
-            ? "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200"
-            : "text-zinc-800 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800/80"
-        }`}
+        className={`flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50 focus-visible:ring-offset-2 ${
+ isSelected
+ ? "bg-bruma text-tinta "
+ : "text-tinta hover:bg-bruma "
+ }`}
         aria-label={`Vincular cuenta con ${label}`}
         aria-pressed={isSelected}
       >
         <span
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-zinc-100 text-sm font-semibold text-zinc-600 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-bruma bg-bruma text-sm font-semibold text-marea"
           aria-hidden
         >
           {(client?.name ?? "?").charAt(0).toUpperCase()}
@@ -177,7 +176,7 @@ function ClientSearchResultRow({ client, isSelected, onSelect }) {
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium">{fullName}</span>
           {phone ? (
-            <span className="block truncate text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="block truncate text-xs text-marea">
               {phone}
             </span>
           ) : null}
@@ -426,7 +425,7 @@ function HomeSearchView({ service }) {
     if (isLinking) {
       resultsStatus = (
         <p
-          className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400"
+          className="px-4 py-6 text-center text-sm text-marea"
           role="status"
           aria-live="polite"
         >
@@ -436,7 +435,7 @@ function HomeSearchView({ service }) {
     } else if (trimmedClientQuery.length < MIN_SEARCH_LENGTH) {
       resultsStatus = (
         <p
-          className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400"
+          className="px-4 py-6 text-center text-sm text-marea"
           role="status"
         >
           Escribe al menos {MIN_SEARCH_LENGTH} caracteres para buscar un cliente
@@ -445,7 +444,7 @@ function HomeSearchView({ service }) {
     } else if (isClientLoading) {
       resultsStatus = (
         <p
-          className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400"
+          className="px-4 py-6 text-center text-sm text-marea"
           role="status"
           aria-live="polite"
         >
@@ -456,11 +455,11 @@ function HomeSearchView({ service }) {
       resultsStatus = (
         <div className="flex flex-col items-center gap-2 px-4 py-6" role="status">
           {clientError ? (
-            <p className="text-center text-sm text-red-700 dark:text-red-300" role="alert">
+            <p className="text-center text-sm text-red-700" role="alert">
               {clientError}
             </p>
           ) : null}
-          <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-center text-sm text-marea">
             No se encontraron clientes
           </p>
         </div>
@@ -469,7 +468,7 @@ function HomeSearchView({ service }) {
   } else if (error) {
     resultsStatus = (
       <p
-        className="px-4 py-6 text-center text-sm text-red-700 dark:text-red-300"
+        className="px-4 py-6 text-center text-sm text-red-700"
         role="alert"
       >
         {isChangingPaymentClient
@@ -480,7 +479,7 @@ function HomeSearchView({ service }) {
   } else if (isReassigning) {
     resultsStatus = (
       <p
-        className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400"
+        className="px-4 py-6 text-center text-sm text-marea"
         role="status"
         aria-live="polite"
       >
@@ -490,7 +489,7 @@ function HomeSearchView({ service }) {
   } else if (trimmedQuery.length < MIN_SEARCH_LENGTH) {
     resultsStatus = (
       <p
-        className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400"
+        className="px-4 py-6 text-center text-sm text-marea"
         role="status"
       >
         Escribe al menos {MIN_SEARCH_LENGTH} caracteres para buscar
@@ -499,7 +498,7 @@ function HomeSearchView({ service }) {
   } else if (isLoading) {
     resultsStatus = (
       <p
-        className="px-4 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400"
+        className="px-4 py-6 text-center text-sm text-marea"
         role="status"
         aria-live="polite"
       >
@@ -509,14 +508,14 @@ function HomeSearchView({ service }) {
   } else if (results.length === 0) {
     resultsStatus = (
       <div className="flex flex-col items-center gap-4 px-4 py-6" role="status">
-        <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-center text-sm text-marea">
           No se encontraron cuentas
         </p>
         {!isChangingPaymentClient ? (
           <button
             type="button"
             onClick={handleStartLinkClient}
-            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-colors hover:bg-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
+            className="inline-flex min-h-11 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-colors hover:bg-ambar focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2"
             aria-label={`Vincular la cuenta ${trimmedQuery} con un cliente`}
           >
             Vincular con un cliente
@@ -532,10 +531,10 @@ function HomeSearchView({ service }) {
         <div
           className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4"
           role="group"
-          aria-label={`DAIEGO y ${serviceName}`}
+          aria-label={`Aureo y ${serviceName}`}
         >
-          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-zinc-200/80 bg-white p-2.5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 tablet:h-36 tablet:w-36 tablet:p-3">
-            <DaiegoLogo
+          <div className="flex h-[7.5rem] w-[7.5rem] shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-marea/20 bg-crema p-2.5 shadow-sm tablet:h-36 tablet:w-36 tablet:p-3">
+            <AureoIsotipo
               width={144}
               height={144}
               priority
@@ -555,7 +554,7 @@ function HomeSearchView({ service }) {
           </ServiceLogoLink>
         </div>
 
-        <p className="mb-4 max-w-md text-center text-sm font-medium text-zinc-600 dark:text-zinc-300 tablet:text-base">
+        <p className="mb-4 max-w-md text-center text-sm font-medium text-marea tablet:text-base">
           {isLinkingClient
             ? `Busca el cliente para vincular la cuenta ${accountToLink}`
             : isChangingPaymentClient
@@ -608,7 +607,7 @@ function HomeSearchView({ service }) {
         )}
 
         <div className="mb-4 flex w-full flex-col items-center gap-2">
-          <p className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="text-center text-xs text-marea">
             {serviceName}
             {isLinkingClient && accountToLink ? ` · Cuenta ${accountToLink}` : ""}
           </p>
@@ -617,7 +616,7 @@ function HomeSearchView({ service }) {
               type="button"
               onClick={handleCancelLinkClient}
               disabled={isLinking}
-              className="inline-flex min-h-9 items-center justify-center rounded-xl px-3 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 disabled:opacity-50 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus:ring-offset-zinc-950"
+              className="inline-flex min-h-9 items-center justify-center rounded-xl px-3 text-sm font-medium text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 disabled:opacity-50"
               aria-label="Cancelar vinculación con cliente"
             >
               Cancelar
@@ -627,7 +626,7 @@ function HomeSearchView({ service }) {
 
         <div
           id="home-search-results"
-          className="w-full overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900"
+          className="w-full overflow-hidden rounded-xl border border-marea/20 bg-crema"
           role="region"
           aria-label={
             isLinkingClient
@@ -642,13 +641,13 @@ function HomeSearchView({ service }) {
             <div>
               {clientError ? (
                 <p
-                  className="border-b border-red-200 px-4 py-3 text-center text-sm text-red-700 dark:border-red-900/50 dark:text-red-300"
+                  className="border-b border-red-200 px-4 py-3 text-center text-sm text-red-700"
                   role="alert"
                 >
                   {clientError}
                 </p>
               ) : null}
-              <ul className="max-h-[min(50vh,24rem)] divide-y divide-zinc-100 overflow-y-auto p-1 dark:divide-zinc-800">
+              <ul className="max-h-[min(50vh,24rem)] divide-y divide-bruma overflow-y-auto p-1">
                 {clientResults.map((client) => (
                   <ClientSearchResultRow
                     key={client.id}
@@ -660,7 +659,7 @@ function HomeSearchView({ service }) {
               </ul>
             </div>
           ) : (
-            <ul className="max-h-[min(50vh,24rem)] divide-y divide-zinc-100 overflow-y-auto p-1 dark:divide-zinc-800">
+            <ul className="max-h-[min(50vh,24rem)] divide-y divide-bruma overflow-y-auto p-1">
               {results.map((receipt) => (
                 <SearchResultRow
                   key={receipt.id}
@@ -688,13 +687,13 @@ function HomeSearchViewSkeleton() {
     >
       <p className="sr-only">Cargando búsqueda…</p>
       <div className="mb-6 flex items-center justify-center gap-3 tablet:mb-8 tablet:gap-4">
-        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:h-36 tablet:w-36" />
-        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:h-36 tablet:w-36" />
+        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-bruma tablet:h-36 tablet:w-36" />
+        <div className="h-[7.5rem] w-[7.5rem] animate-pulse rounded-2xl bg-bruma tablet:h-36 tablet:w-36" />
       </div>
-      <div className="mb-4 h-5 w-72 max-w-full animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
-      <div className="mb-2 h-12 w-full animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-      <div className="mb-4 h-3 w-24 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
-      <div className="h-40 w-full animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+      <div className="mb-4 h-5 w-72 max-w-full animate-pulse rounded-lg bg-bruma" />
+      <div className="mb-2 h-12 w-full animate-pulse rounded-xl bg-bruma" />
+      <div className="mb-4 h-3 w-24 animate-pulse rounded bg-bruma" />
+      <div className="h-40 w-full animate-pulse rounded-xl bg-bruma" />
     </div>
   );
 }
@@ -708,8 +707,8 @@ export function HomeViewSkeleton() {
       aria-busy="true"
       aria-live="polite"
     >
-      <div className="mb-4 aspect-[7/5] w-[min(100%,16vw)] min-w-36 shrink-0 animate-pulse rounded-2xl bg-zinc-200 dark:bg-zinc-800 tablet:mb-6 tablet:min-w-44" />
-      <div className="mb-4 h-7 w-72 max-w-full shrink-0 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800 tablet:mb-6" />
+      <div className="mb-4 aspect-[7/5] w-[min(100%,16vw)] min-w-36 shrink-0 animate-pulse rounded-2xl bg-bruma tablet:mb-6 tablet:min-w-44" />
+      <div className="mb-4 h-7 w-72 max-w-full shrink-0 animate-pulse rounded-lg bg-bruma tablet:mb-6" />
       <p className="sr-only">Cargando servicios…</p>
       <div className="min-h-0 w-full flex-1 overflow-y-auto overscroll-contain pb-4">
         <ul
@@ -719,8 +718,8 @@ export function HomeViewSkeleton() {
           {Array.from({ length: 20 }, (_, index) => (
             <li key={index} className="min-w-0">
               <div className="flex flex-col items-center gap-1.5">
-                <div className="aspect-square w-full animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
-                <div className="h-3 w-3/4 animate-pulse rounded bg-zinc-200 dark:bg-zinc-800" />
+                <div className="aspect-square w-full animate-pulse rounded-xl bg-bruma" />
+                <div className="h-3 w-3/4 animate-pulse rounded bg-bruma" />
               </div>
             </li>
           ))}
@@ -736,23 +735,24 @@ export function HomeView({ services, fetchError }) {
       <div
         className="mb-4 w-[min(100%,16vw)] min-w-36 shrink-0 tablet:mb-6 tablet:min-w-44"
         role="group"
-        aria-label="DAIEGO"
+        aria-label="Aureo"
       >
-        <DaiegoLogoMark
+        <AureoIsotipo
           priority
-          className="w-full rounded-2xl p-3 tablet:p-4"
-          markClassName="w-full"
+          width={160}
+          height={160}
+          className="w-full rounded-2xl object-contain p-3 tablet:p-4"
         />
       </div>
 
-      <h1 className="mb-4 max-w-xl shrink-0 text-center text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 tablet:mb-6 tablet:text-2xl">
+      <h1 className="mb-4 max-w-xl shrink-0 text-center text-xl font-semibold tracking-tight text-tinta tablet:mb-6 tablet:text-2xl">
         ¡Hola! ¿Qué servicio deseas realizar?
       </h1>
 
       <div className="min-h-0 w-full flex-1 overflow-y-auto overscroll-contain pb-4">
         {fetchError ? (
           <p
-            className="max-w-md rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/50 dark:text-red-300"
+            className="max-w-md rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-700"
             role="alert"
           >
             No se pudieron cargar los servicios. Intenta de nuevo más tarde.
@@ -763,7 +763,7 @@ export function HomeView({ services, fetchError }) {
             role="status"
           >
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-bruma text-tinta"
               aria-hidden
             >
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -775,7 +775,7 @@ export function HomeView({ services, fetchError }) {
                 />
               </svg>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               Aún no hay servicios disponibles.
             </p>
           </div>

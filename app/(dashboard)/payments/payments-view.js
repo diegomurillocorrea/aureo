@@ -169,11 +169,11 @@ function ServiceImageThumb({
     <img
       src={url}
       alt={link ? `Logo de ${serviceName}` : ""}
-      className={`${size} shrink-0 ${rounded} border border-zinc-200 object-contain bg-white dark:border-zinc-700 dark:bg-zinc-800`}
+      className={`${size} shrink-0 ${rounded} border border-bruma object-contain bg-crema `}
     />
   ) : (
     <div
-      className={`${size} flex shrink-0 items-center justify-center ${rounded} border border-dashed border-zinc-300 text-zinc-400 dark:border-zinc-700 dark:text-zinc-600`}
+      className={`${size} flex shrink-0 items-center justify-center ${rounded} border border-dashed border-bruma text-marea `}
       aria-hidden={!link}
     >
       <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,7 +190,7 @@ function ServiceImageThumb({
       target="_blank"
       rel="noopener noreferrer"
       tabIndex={0}
-      className={`inline-flex shrink-0 cursor-pointer transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 dark:focus:ring-offset-zinc-950 ${rounded}`}
+      className={`inline-flex shrink-0 cursor-pointer transition-opacity hover:opacity-80 focus:outline-none focus:ring-2 focus:ring-marea/50 focus:ring-offset-2 ${rounded}`}
       aria-label={`Abrir sitio de ${serviceName} en una nueva pestaña`}
       title={`Ir a ${serviceName} (nueva pestaña)`}
     >
@@ -202,12 +202,12 @@ function ServiceImageThumb({
 function getStatusBadgeClass(status) {
   switch (normalizePaymentStatus(status)) {
     case PAYMENT_STATUS_PAID:
-      return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
+      return "bg-ambar text-tinta";
     case PAYMENT_STATUS_SENT:
-      return "bg-pink-100 text-pink-800 dark:bg-pink-900/40 dark:text-pink-300";
+      return "bg-marea text-crema";
     case PAYMENT_STATUS_REGISTERED:
     default:
-      return "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300";
+      return "bg-bruma text-tinta";
   }
 }
 
@@ -220,7 +220,7 @@ const PERIOD_OPTIONS = [
 ];
 
 const filterControlClass =
-  "w-full min-w-40 rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+  "w-full min-w-40 rounded-xl border border-marea/20 bg-crema px-3 py-2.5 text-sm text-tinta transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20     ";
 
 const PERIOD_QUERY_VALUES = new Set([
   "semanal",
@@ -454,7 +454,7 @@ function CopyIconButton({ value, label, onCopied, onError }) {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-emerald-50 hover:text-emerald-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
+      className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-marea transition-colors hover:bg-bruma hover:text-tinta focus:outline-none focus-visible:ring-2 focus-visible:ring-marea/50"
       aria-label={label}
       title={label}
     >
@@ -532,7 +532,7 @@ function PaymentActions({
   }
 
   if (items.length === 0) {
-    return <span className="text-sm text-zinc-400 dark:text-zinc-500">—</span>;
+    return <span className="text-sm text-marea">—</span>;
   }
 
   return (
@@ -564,13 +564,13 @@ function ServicioCell({ payment, onCopied, onCopyError }) {
       />
       <div className="min-w-0 flex-1 space-y-1.5 leading-relaxed">
         {serviceName ? (
-          <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          <p className="truncate text-sm font-medium text-tinta">
             {serviceName}
           </p>
         ) : null}
         <div className="flex min-w-0 items-center gap-1">
-          <p className="min-w-0 truncate text-sm text-zinc-600 dark:text-zinc-300">
-            <span className="font-medium text-zinc-500 dark:text-zinc-400">
+          <p className="min-w-0 truncate text-sm text-marea">
+            <span className="font-medium text-marea">
               Cliente:{" "}
             </span>
             {clientName}
@@ -583,8 +583,8 @@ function ServicioCell({ payment, onCopied, onCopyError }) {
           />
         </div>
         <div className="flex min-w-0 items-center gap-1">
-          <p className="min-w-0 truncate text-sm text-zinc-600 dark:text-zinc-300">
-            <span className="font-medium text-zinc-500 dark:text-zinc-400">
+          <p className="min-w-0 truncate text-sm text-marea">
+            <span className="font-medium text-marea">
               ID:{" "}
             </span>
             {accountNumber}
@@ -954,10 +954,10 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
       <header className="flex shrink-0 flex-col gap-4 tablet:flex-row tablet:items-center tablet:justify-between">
         <div className="flex items-center gap-3">
           <span
-            className="h-10 w-1 shrink-0 rounded-full bg-emerald-500"
+            className="h-10 w-1 shrink-0 rounded-full bg-ambar"
             aria-hidden
           />
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tablet:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-tinta tablet:text-3xl">
             Pagos
           </h1>
         </div>
@@ -966,7 +966,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           <div className="min-w-40">
             <label
               htmlFor="payments-period"
-              className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="mb-1.5 block text-sm font-medium text-tinta"
             >
               Período
             </label>
@@ -990,7 +990,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
               <div className="min-w-40">
                 <label
                   htmlFor="payments-period-from"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Desde
                 </label>
@@ -1007,7 +1007,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
               <div className="min-w-40">
                 <label
                   htmlFor="payments-period-to"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Hasta
                 </label>
@@ -1026,7 +1026,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
             <div className="min-w-40">
               <label
                 htmlFor="payments-selected-date"
-                className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="mb-1.5 block text-sm font-medium text-tinta"
               >
                 Fecha
               </label>
@@ -1042,7 +1042,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           )}
 
           <div className="min-w-40">
-            <p className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <p className="mb-1.5 block text-sm font-medium text-tinta">
               Total pagado
             </p>
             <div
@@ -1057,7 +1057,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           </div>
 
           <div className="min-w-40">
-            <p className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <p className="mb-1.5 block text-sm font-medium text-tinta">
               Total ganancias
             </p>
             <div
@@ -1076,7 +1076,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
       {fetchError && (
         <div
           role="alert"
-          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {fetchError}
         </div>
@@ -1093,11 +1093,11 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
             value={searchQuery}
             onChange={handleSearchChange}
             placeholder="Buscar por cliente, ID de servicio, estado o monto..."
-            className="w-full rounded-full border border-zinc-300 bg-white pl-10 pr-4 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-500/50 dark:bg-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30"
+            className="w-full rounded-full border border-marea/30 bg-crema pl-10 pr-4 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20"
             aria-label="Buscar pagos por cliente, ID de servicio, estado o monto"
           />
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-marea"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -1118,7 +1118,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
         aria-label="Lista de pagos"
       >
         <div className={tableViewSectionTitleClass}>
-          <h2 className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+          <h2 className="text-sm font-semibold text-crema">
             Lista de pagos
           </h2>
         </div>
@@ -1129,7 +1129,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
             role="status"
           >
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-bruma text-tinta"
               aria-hidden
             >
               <svg
@@ -1146,7 +1146,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                 />
               </svg>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               {allPayments.length === 0
                 ? "No hay pagos para mostrar."
                 : "No hay pagos en el período seleccionado."}
@@ -1157,7 +1157,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
             className="flex flex-col items-center justify-center gap-4 px-4 py-16 text-center"
             role="status"
           >
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               No se encontraron pagos que coincidan con la búsqueda.
             </p>
           </div>
@@ -1166,11 +1166,11 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
             {filteredPayments.map((payment, index) => (
               <li
                 key={payment.id}
-                className="space-y-4 px-5 py-5 transition-colors hover:bg-emerald-50/40 dark:hover:bg-emerald-950/10"
+                className="space-y-4 px-5 py-5 transition-colors hover:bg-bruma/40"
               >
                 <div className="flex flex-col gap-0.5">
                   <span
-                    className="text-xs font-medium text-zinc-500 dark:text-zinc-400"
+                    className="text-xs font-medium text-marea"
                     aria-hidden
                   >
                     {index + 1}.
@@ -1183,15 +1183,15 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                 </div>
                 <div className="flex flex-col gap-3 text-sm leading-relaxed">
                   <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
-                    <span className="font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="font-medium text-tinta">
                       Monto: {formatAmount(payment.total_amount)}
                     </span>
-                    <span className="text-zinc-600 dark:text-zinc-400">
+                    <span className="text-marea">
                       Comisión: {formatAmount(payment.commission)}
                     </span>
                     <StatusBadge status={payment.status} />
                   </div>
-                  <span className="text-zinc-500 dark:text-zinc-400">
+                  <span className="text-marea">
                     {formatDateTimeEsSv(payment.created_at)}
                   </span>
                 </div>
@@ -1217,45 +1217,45 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                 <col className="w-[13%]" />
               </colgroup>
               <thead className={tableHeadClass}>
-                <tr className="border-b border-zinc-200/80 dark:border-zinc-800">
+                <tr className="border-b border-bruma">
                   <th
-                    className={`${tableHeadCellClass} w-12 px-2 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-4 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} w-12 px-2 py-4 text-center font-semibold text-tinta tablet:px-4 tablet:py-4.5`}
                     scope="col"
                   >
                     #
                   </th>
                   <th
-                    className={`${tableHeadCellClass} px-4 py-4 text-left font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} px-4 py-4 text-left font-semibold text-tinta tablet:px-5 tablet:py-4.5`}
                     scope="col"
                   >
                     Servicio
                   </th>
                   <th
-                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-tinta tablet:px-5 tablet:py-4.5`}
                     scope="col"
                   >
                     Monto
                   </th>
                   <th
-                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-tinta tablet:px-5 tablet:py-4.5`}
                     scope="col"
                   >
                     Comisión
                   </th>
                   <th
-                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-tinta tablet:px-5 tablet:py-4.5`}
                     scope="col"
                   >
                     Estado
                   </th>
                   <th
-                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-tinta tablet:px-5 tablet:py-4.5`}
                     scope="col"
                   >
                     Fecha / Hora
                   </th>
                   <th
-                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-5 tablet:py-4.5`}
+                    className={`${tableHeadCellClass} px-4 py-4 text-center font-semibold text-tinta tablet:px-5 tablet:py-4.5`}
                     scope="col"
                   >
                     Acciones
@@ -1266,10 +1266,10 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                 {filteredPayments.map((payment, index) => (
                   <tr
                     key={payment.id}
-                    className="border-b border-zinc-100 last:border-0 transition-colors hover:bg-emerald-50/40 dark:border-zinc-800 dark:hover:bg-emerald-950/10"
+                    className="border-b border-bruma last:border-0 transition-colors hover:bg-bruma/40"
                   >
                     <td
-                      className="w-12 px-2 py-4 text-center tabular-nums text-zinc-500 dark:text-zinc-400 tablet:px-4 tablet:py-4.5"
+                      className="w-12 px-2 py-4 text-center tabular-nums text-marea tablet:px-4 tablet:py-4.5"
                       aria-label={`Fila ${index + 1}`}
                     >
                       {index + 1}
@@ -1281,16 +1281,16 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                         onCopyError={handleCopyError}
                       />
                     </td>
-                    <td className="whitespace-nowrap px-4 py-4 text-center font-medium tabular-nums text-zinc-900 dark:text-zinc-50 tablet:px-5 tablet:py-4.5">
+                    <td className="whitespace-nowrap px-4 py-4 text-center font-medium tabular-nums text-tinta tablet:px-5 tablet:py-4.5">
                       {formatAmount(payment.total_amount)}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-4 text-center tabular-nums text-zinc-600 dark:text-zinc-400 tablet:px-5 tablet:py-4.5">
+                    <td className="whitespace-nowrap px-4 py-4 text-center tabular-nums text-marea tablet:px-5 tablet:py-4.5">
                       {formatAmount(payment.commission)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-center tablet:px-5 tablet:py-4.5">
                       <StatusBadge status={payment.status} />
                     </td>
-                    <td className="whitespace-nowrap px-4 py-4 text-center text-zinc-600 dark:text-zinc-400 tablet:px-5 tablet:py-4.5">
+                    <td className="whitespace-nowrap px-4 py-4 text-center text-marea tablet:px-5 tablet:py-4.5">
                       {formatDateTimeEsSv(payment.created_at)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-4 text-center tablet:px-5 tablet:py-4.5">
@@ -1313,7 +1313,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-4 left-4 right-4 z-40 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 shadow-lg dark:border-emerald-900/50 dark:bg-emerald-950/50 dark:text-emerald-200 tablet:left-auto tablet:right-4 tablet:max-w-sm"
+          className="fixed bottom-4 left-4 right-4 z-40 rounded-xl border border-bruma bg-bruma px-4 py-3 text-sm text-tinta shadow-lg tablet:left-auto tablet:right-4 tablet:max-w-sm"
         >
           {copyFeedback}
         </div>
@@ -1324,17 +1324,17 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           role={whatsAppFeedback.type === "error" ? "alert" : "status"}
           aria-live="polite"
           className={`fixed bottom-4 left-4 right-4 z-40 rounded-xl px-4 py-3 text-sm shadow-lg tablet:left-auto tablet:right-4 tablet:max-w-sm ${
-            whatsAppFeedback.type === "error"
-              ? "bg-red-50 text-red-700 dark:bg-red-950/50 dark:text-red-300"
-              : "border border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/50 dark:text-emerald-200"
-          }`}
+ whatsAppFeedback.type === "error"
+ ? "bg-red-50 text-red-700 "
+ : "border border-bruma bg-bruma text-tinta "
+ }`}
         >
           <div className="flex items-center justify-between gap-2">
             <span>{whatsAppFeedback.message}</span>
             <button
               type="button"
               onClick={() => setWhatsAppFeedback(null)}
-              className="shrink-0 rounded p-1 hover:bg-black/5 dark:hover:bg-white/10"
+              className="shrink-0 rounded p-1 hover:bg-black/5"
               aria-label="Cerrar"
             >
               <span aria-hidden>×</span>
@@ -1365,11 +1365,11 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
           aria-labelledby="delete-dialog-title"
           aria-describedby="delete-dialog-desc"
         >
-          <div className="w-full max-w-sm rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 id="delete-dialog-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+          <div className="w-full max-w-sm rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl">
+            <h2 id="delete-dialog-title" className="text-xl font-bold text-tinta">
               Eliminar pago
             </h2>
-            <p id="delete-dialog-desc" className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p id="delete-dialog-desc" className="mt-2 text-sm text-marea">
               ¿Eliminar el pago de{" "}
               <strong>{formatAmount(deleteTarget.total_amount)}</strong>? Esta acción no se
               puede deshacer.
@@ -1377,7 +1377,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
             {deleteError && (
               <div
                 role="alert"
-                className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
               >
                 {deleteError}
               </div>
@@ -1387,7 +1387,7 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
                 type="button"
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
-                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta hover:bg-crema disabled:opacity-50"
               >
                 Cancelar
               </button>

@@ -1,16 +1,15 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-poppins);
+  --font-sans: "Avenir Next", Avenir, var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
+  --color-tinta: #163a4a;
+  --color-marea: #3e7c8a;
+  --color-ambar: #e2a23a;
+  --color-bruma: #dce9ec;
+  --color-crema: #f6f3ec;
   --color-brand-green: #00bc7d;
   --color-brand-red: #cc3431;
-  --color-streaming-netflix: #e50914;
-  --color-streaming-disney: #113ccf;
-  --color-streaming-crunchyroll: #f47521;
-  --color-streaming-prime: #00a8e1;
-  --color-streaming-youtube: #ff0000;
-  --color-streaming-spotify: #1db954;
   /* Breakpoints Tailwind:
      sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px */
   --breakpoint-sm: 40rem;   /* 640px */
@@ -20,18 +19,7 @@
   --breakpoint-2xl: 96rem;  /* 1536px */
 }
 
-@variant dark (&:where(.dark, .dark *)) {
-}
-
 :root {
-  color-scheme: light dark;
-}
-
-:root.dark {
-  color-scheme: dark;
-}
-
-:root.light {
   color-scheme: light;
 }
 
@@ -44,11 +32,13 @@ html {
 }
 
 body {
-  font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  font-family: "Avenir Next", Avenir, var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
+  background-color: var(--color-crema);
+  color: var(--color-tinta);
 }
 
 /* Shared focus ring for accessibility */
 .focus-ring {
-  @apply outline-none ring-2 ring-emerald-500/50 ring-offset-2 ring-offset-white dark:ring-offset-zinc-900;
+  @apply outline-none ring-2 ring-marea/50 ring-offset-2 ring-offset-crema;
 }

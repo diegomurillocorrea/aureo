@@ -140,7 +140,7 @@ export function UsersView({ initialUsers, fetchError }) {
   }, []);
 
   const inputClass =
-    "w-full rounded-xl border border-zinc-300 bg-white px-3 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30";
+    "w-full rounded-xl border border-marea/20 bg-crema px-3 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20 disabled:opacity-50      ";
 
   return (
     <div className={tableViewRootClass}>
@@ -148,10 +148,10 @@ export function UsersView({ initialUsers, fetchError }) {
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
             <span
-              className="h-10 w-1 shrink-0 rounded-full bg-emerald-500"
+              className="h-10 w-1 shrink-0 rounded-full bg-ambar"
               aria-hidden
             />
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tablet:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-tinta tablet:text-3xl">
               Usuarios
             </h1>
           </div>
@@ -159,19 +159,19 @@ export function UsersView({ initialUsers, fetchError }) {
             <button
               type="button"
               onClick={openCreate}
-              className="inline-flex h-11 w-fit shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-all duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-emerald-500 dark:hover:bg-emerald-600 dark:focus:ring-offset-zinc-900"
+              className="inline-flex h-11 w-fit shrink-0 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-all duration-200 hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea focus:ring-offset-2"
               aria-label="Agregar usuario"
             >
               Agregar usuario
             </button>
           )}
         </div>
-        <p className="pl-4 text-sm text-zinc-600 dark:text-zinc-400 tablet:text-base">
+        <p className="pl-4 text-sm text-marea tablet:text-base">
           Gestionar los usuarios del sistema (acceso e inicio de sesión).
           {users.length > 0 ? (
             <>
               {" "}
-              <span className="font-medium text-emerald-700 dark:text-emerald-400">
+              <span className="font-medium text-tinta">
                 {users.length}{" "}
                 {users.length === 1 ? "usuario" : "usuarios"}
               </span>
@@ -183,7 +183,7 @@ export function UsersView({ initialUsers, fetchError }) {
       {fetchError && (
         <div
           role="alert"
-          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+          className="shrink-0 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
         >
           {fetchError}
         </div>
@@ -200,11 +200,11 @@ export function UsersView({ initialUsers, fetchError }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nombre o correo..."
-            className="w-full rounded-full border border-zinc-300 bg-white pl-10 pr-4 py-2.5 text-zinc-900 placeholder-zinc-400 transition-all duration-200 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-500/50 dark:bg-zinc-700 dark:text-zinc-100 dark:placeholder-zinc-400 dark:focus:border-emerald-400 dark:focus:ring-emerald-500/30"
+            className="w-full rounded-full border border-marea/30 bg-crema pl-10 pr-4 py-2.5 text-tinta placeholder-marea/60 transition-all duration-200 focus:border-marea focus:outline-none focus:ring-2 focus:ring-marea/20"
             aria-label="Buscar usuarios por nombre o correo"
           />
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400 dark:text-zinc-500"
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-marea"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -222,7 +222,7 @@ export function UsersView({ initialUsers, fetchError }) {
 
       <div className={tableViewSectionClass}>
         <div className={tableViewSectionTitleClass}>
-          <h2 className="text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+          <h2 className="text-sm font-semibold text-crema">
             Lista de usuarios
           </h2>
         </div>
@@ -230,7 +230,7 @@ export function UsersView({ initialUsers, fetchError }) {
         {users.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-5 px-4 py-20 text-center">
             <div
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-bruma text-tinta"
               aria-hidden
             >
               <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,7 +242,7 @@ export function UsersView({ initialUsers, fetchError }) {
                 />
               </svg>
             </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               {fetchError
                 ? "No se pudieron cargar los usuarios."
                 : "Aún no hay usuarios. Agrega tu primer usuario para comenzar."}
@@ -251,7 +251,7 @@ export function UsersView({ initialUsers, fetchError }) {
               <button
                 type="button"
                 onClick={openCreate}
-                className="inline-flex h-11 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-medium text-white transition-all hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                className="inline-flex h-11 items-center justify-center rounded-xl bg-ambar px-5 text-sm font-medium text-tinta transition-all hover:bg-ambar/90"
                 aria-label="Agregar usuario"
               >
                 Agregar usuario
@@ -260,13 +260,13 @@ export function UsersView({ initialUsers, fetchError }) {
           </div>
         ) : filteredUsers.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-5 px-4 py-20 text-center">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-marea">
               No se encontraron usuarios con ese criterio de búsqueda.
             </p>
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-300 bg-white px-5 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+              className="inline-flex h-11 items-center justify-center rounded-xl border border-marea/20 bg-crema px-5 text-sm font-medium text-tinta transition-all hover:bg-crema"
               aria-label="Limpiar búsqueda"
             >
               Limpiar búsqueda
@@ -277,22 +277,22 @@ export function UsersView({ initialUsers, fetchError }) {
             {filteredUsers.map((user, index) => (
               <li
                 key={user.id}
-                className="flex flex-col gap-2 px-4 py-4 first:pt-4 last:pb-4 transition-colors hover:bg-emerald-50/40 dark:hover:bg-emerald-950/10 tablet:px-6"
+                className="flex flex-col gap-2 px-4 py-4 first:pt-4 last:pb-4 transition-colors hover:bg-bruma/40 tablet:px-6"
               >
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400" aria-hidden>
+                  <span className="text-xs font-medium text-marea" aria-hidden>
                     {index + 1}.
                   </span>
-                  <span className="font-semibold text-zinc-900 dark:text-zinc-50">
+                  <span className="font-semibold text-tinta">
                     {user.full_name || "—"}
                   </span>
-                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                  <span className="text-sm text-marea">
                     {user.email}
                   </span>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                  <span className="text-xs text-marea">
                     Rol: {user.role_name || "Sin rol"}
                   </span>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-500">
+                  <span className="text-xs text-marea">
                     {formatDateEsSv(user.created_at)}
                   </span>
                 </div>
@@ -312,24 +312,24 @@ export function UsersView({ initialUsers, fetchError }) {
           <div className={tableScrollBodyClass}>
             <table className="w-full text-left text-sm" role="grid">
               <thead className={tableHeadClass}>
-                <tr className="border-b border-zinc-200/80 dark:border-zinc-800">
-                  <th className="w-12 px-2 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-4" scope="col">
+                <tr className="border-b border-bruma">
+                  <th className="w-12 px-2 py-3.5 font-semibold text-tinta tablet:px-4" scope="col">
                     #
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Nombre
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Correo
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Rol
                   </th>
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Creado
                   </th>
                   {(canEdit || canDelete) && (
-                  <th className="px-4 py-3.5 font-semibold text-zinc-700 dark:text-zinc-300 tablet:px-6">
+                  <th className="px-4 py-3.5 font-semibold text-tinta tablet:px-6">
                     Acciones
                   </th>
                   )}
@@ -339,21 +339,21 @@ export function UsersView({ initialUsers, fetchError }) {
                 {filteredUsers.map((user, index) => (
                   <tr
                     key={user.id}
-                    className="border-b border-zinc-100 last:border-0 transition-colors hover:bg-emerald-50/40 dark:border-zinc-800 dark:hover:bg-emerald-950/10"
+                    className="border-b border-bruma last:border-0 transition-colors hover:bg-bruma/40"
                   >
-                    <td className="w-12 px-2 py-3.5 text-zinc-500 dark:text-zinc-400 tablet:px-4" aria-label={`Fila ${index + 1}`}>
+                    <td className="w-12 px-2 py-3.5 text-marea tablet:px-4" aria-label={`Fila ${index + 1}`}>
                       {index + 1}
                     </td>
-                    <td className="px-4 py-3.5 font-medium text-zinc-900 dark:text-zinc-50 tablet:px-6">
+                    <td className="px-4 py-3.5 font-medium text-tinta tablet:px-6">
                       {user.full_name || "—"}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {user.email}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-600 dark:text-zinc-400 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {user.role_name || "Sin rol"}
                     </td>
-                    <td className="px-4 py-3.5 text-zinc-500 dark:text-zinc-500 tablet:px-6">
+                    <td className="px-4 py-3.5 text-marea tablet:px-6">
                       {formatDateEsSv(user.created_at)}
                     </td>
                     {(canEdit || canDelete) && (
@@ -385,17 +385,17 @@ export function UsersView({ initialUsers, fetchError }) {
           aria-labelledby="user-form-title"
         >
           <div
-            className="w-full max-w-md rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 tablet:p-8"
+            className="w-full max-w-md rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl tablet:p-8"
             onKeyDown={(e) => e.key === "Escape" && closeForm()}
           >
-            <h2 id="user-form-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h2 id="user-form-title" className="text-xl font-bold text-tinta">
               {isEditing ? "Editar usuario" : "Agregar usuario"}
             </h2>
             <form onSubmit={handleFormSubmit} className="mt-6 flex flex-col gap-5">
               <div>
                 <label
                   htmlFor="user-full-name"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Nombre
                 </label>
@@ -414,7 +414,7 @@ export function UsersView({ initialUsers, fetchError }) {
               <div>
                 <label
                   htmlFor="user-email"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Correo <span className="text-red-500">*</span>
                 </label>
@@ -435,7 +435,7 @@ export function UsersView({ initialUsers, fetchError }) {
               <div>
                 <label
                   htmlFor="user-password"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Contraseña {!isEditing && <span className="text-red-500">*</span>}
                 </label>
@@ -452,7 +452,7 @@ export function UsersView({ initialUsers, fetchError }) {
                   autoComplete="new-password"
                   className={inputClass}
                 />
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mt-1 text-xs text-marea">
                   {isEditing
                     ? "Escribe una nueva contraseña solo si deseas cambiarla."
                     : "Mínimo 6 caracteres."}
@@ -461,7 +461,7 @@ export function UsersView({ initialUsers, fetchError }) {
               <div>
                 <label
                   htmlFor="user-role"
-                  className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="mb-1.5 block text-sm font-medium text-tinta"
                 >
                   Rol
                 </label>
@@ -487,7 +487,7 @@ export function UsersView({ initialUsers, fetchError }) {
               {formError && (
                 <div
                   role="alert"
-                  className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                  className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
                 >
                   {formError}
                 </div>
@@ -498,7 +498,7 @@ export function UsersView({ initialUsers, fetchError }) {
                   type="button"
                   onClick={closeForm}
                   disabled={isSubmitting}
-                  className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                   aria-label="Cancelar"
                 >
                   Cancelar
@@ -506,7 +506,7 @@ export function UsersView({ initialUsers, fetchError }) {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:opacity-50 dark:bg-emerald-500 dark:hover:bg-emerald-600 dark:focus:ring-offset-zinc-900"
+                  className="flex-1 rounded-xl bg-ambar px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-ambar/90 focus:outline-none focus:ring-2 focus:ring-marea focus:ring-offset-2 disabled:opacity-50"
                   aria-busy={isSubmitting}
                   aria-label={isEditing ? "Guardar cambios" : "Crear usuario"}
                 >
@@ -527,11 +527,11 @@ export function UsersView({ initialUsers, fetchError }) {
           aria-labelledby="delete-dialog-title"
           aria-describedby="delete-dialog-desc"
         >
-          <div className="w-full max-w-sm rounded-2xl border border-zinc-200/80 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
-            <h2 id="delete-dialog-title" className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
+          <div className="w-full max-w-sm rounded-2xl border border-marea/20 bg-crema p-6 shadow-xl">
+            <h2 id="delete-dialog-title" className="text-xl font-bold text-tinta">
               Eliminar usuario
             </h2>
-            <p id="delete-dialog-desc" className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            <p id="delete-dialog-desc" className="mt-2 text-sm text-marea">
               ¿Estás seguro de que deseas eliminar a{" "}
               <strong>{deleteTarget.full_name || deleteTarget.email}</strong>
               ? Esta acción no se puede deshacer.
@@ -539,7 +539,7 @@ export function UsersView({ initialUsers, fetchError }) {
             {deleteError && (
               <div
                 role="alert"
-                className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700 dark:bg-red-950/50 dark:text-red-300"
+                className="mt-3 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-700"
               >
                 {deleteError}
               </div>
@@ -549,7 +549,7 @@ export function UsersView({ initialUsers, fetchError }) {
                 type="button"
                 onClick={handleDeleteCancel}
                 disabled={isDeleting}
-                className="flex-1 rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm font-medium text-zinc-700 transition-all hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                className="flex-1 rounded-xl border border-marea/20 bg-crema px-4 py-3 text-sm font-medium text-tinta transition-all hover:bg-crema disabled:opacity-50"
                 aria-label="Cancelar"
               >
                 Cancelar
@@ -558,7 +558,7 @@ export function UsersView({ initialUsers, fetchError }) {
                 type="button"
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
-                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 dark:focus:ring-offset-zinc-900"
+                className="flex-1 rounded-xl bg-red-600 px-4 py-3 text-sm font-medium text-white transition-all hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50"
                 aria-busy={isDeleting}
                 aria-label="Eliminar usuario"
               >

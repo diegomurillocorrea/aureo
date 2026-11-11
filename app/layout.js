@@ -1,10 +1,10 @@
-import { Poppins, Geist_Mono } from "next/font/google";
+import { Nunito_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "600"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,17 +14,20 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: "DAIEGO Receipts",
-    template: "DAIEGO Receipts | %s",
+    default: "Aureo",
+    template: "Aureo | %s",
   },
-  description: "Aplicación de administración para gestionar recibos de agua, electricidad e internet.",
+  description: "Cobros al día, sin vueltas.",
+  icons: {
+    icon: "/brand/aureo.ico",
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es">
+    <html lang="es" className="light">
       <body
-        className={`${poppins.variable} ${geistMono.variable} font-sans antialiased min-h-screen`}
+        className={`${nunitoSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen bg-crema text-tinta`}
       >
         {children}
       </body>
