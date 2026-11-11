@@ -23,7 +23,8 @@ import {
   tableViewSectionClass,
   tableViewSectionTitleClass,
 } from "@/lib/table-scroll-shell";
-import { deletePaymentAction } from "./actions";
+import { buildPaymentConfirmationUrl } from "@/lib/whatsapp/payment-confirmation-link";
+import { deletePaymentAction, markPaymentWhatsAppSent } from "./actions";
 import {
   PAYMENT_STATUS_REGISTERED,
   PAYMENT_STATUS_PAID,
@@ -132,7 +133,8 @@ function canShowWhatsAppConfirmation(payment) {
 
 function canSendWhatsAppConfirmation(payment) {
   if (!hasStoredProof(payment)) return false;
-  return normalizePaymentStatus(payment?.status) === PAYMENT_STATUS_PAID;
+  const status = normalizePaymentStatus(payment?.status);
+  return status === PAYMENT_STATUS_PAID || status === PAYMENT_STATUS_SENT;
 }
 
 function getPaymentServiceImageUrl(payment) {
@@ -391,18 +393,17 @@ function PaymentActions({
     const isSendingWhatsApp = sendingWhatsAppPaymentIds.has(payment.id);
     const isAlreadySent =
       normalizePaymentStatus(payment?.status) === PAYMENT_STATUS_SENT;
-    const isWhatsAppDisabled = isSendingWhatsApp || isAlreadySent;
     items.push({
       id: "whatsapp-confirmation",
       node: (
         <ActionIconButton
           label={
             isAlreadySent
-              ? "Confirmación de pago ya enviada por WhatsApp"
-              : "Enviar confirmación de pago por WhatsApp"
+              ? "Volver a abrir la confirmación en WhatsApp"
+              : "Abrir confirmación de pago en WhatsApp"
           }
           tone="primary"
-          disabled={isWhatsAppDisabled}
+          disabled={isSendingWhatsApp}
           onClick={() => onSendWhatsAppConfirmation(payment)}
         >
           {isSendingWhatsApp ? (
@@ -654,13 +655,21 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
     async (payment) => {
       const paymentId = payment?.id;
       if (!paymentId || sendingWhatsAppPaymentIdsRef.current.has(paymentId)) return;
+
       if (!canSendWhatsAppConfirmation(payment)) {
         setWhatsAppFeedback({
           type: "error",
           message:
-            normalizePaymentStatus(payment?.status) === PAYMENT_STATUS_SENT
-              ? "Esta confirmación ya fue enviada por WhatsApp."
-              : "Solo los pagos con estado Pagado pueden confirmarse por WhatsApp.",
+            "Solo los pagos con estado Pagado o Enviado y voucher pueden abrirse en WhatsApp.",
+        });
+        return;
+      }
+
+      const linkResult = buildPaymentConfirmationUrl(payment);
+      if (linkResult.error || !linkResult.url) {
+        setWhatsAppFeedback({
+          type: "error",
+          message: linkResult.error ?? "No se pudo preparar el enlace de WhatsApp.",
         });
         return;
       }
@@ -669,42 +678,43 @@ export function PaymentsView({ initialPayments, initialPaymentMethods, fetchErro
       setSendingWhatsAppPaymentIds((current) => new Set(current).add(paymentId));
       setWhatsAppFeedback(null);
 
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 20_000);
-
       try {
-        const response = await fetch(
-          `/api/payments/${encodeURIComponent(paymentId)}/send-whatsapp`,
-          {
-            method: "POST",
-            cache: "no-store",
-            signal: controller.signal,
-          }
-        );
-        const result = await response.json().catch(() => null);
+        const popup = window.open(linkResult.url, "_blank");
+        if (!popup) {
+          setWhatsAppFeedback({
+            type: "error",
+            message:
+              "El navegador bloqueó la ventana de WhatsApp. Permite ventanas emergentes e inténtalo de nuevo.",
+          });
+          return;
+        }
 
-        if (!response.ok || !result?.success) {
-          throw new Error(
-            result?.error ?? "No se pudo enviar la confirmación por WhatsApp."
-          );
+        const status = normalizePaymentStatus(payment?.status);
+        if (status === PAYMENT_STATUS_SENT) {
+          setWhatsAppFeedback({
+            type: "success",
+            message: "Se volvió a abrir WhatsApp con la confirmación.",
+          });
+          return;
+        }
+
+        const result = await markPaymentWhatsAppSent(paymentId);
+        if (result.error) {
+          setWhatsAppFeedback({
+            type: "error",
+            message:
+              "WhatsApp se abrió, pero no se pudo marcar el pago como Enviado.",
+          });
+          return;
         }
 
         setWhatsAppFeedback({
           type: "success",
           message:
-            "Confirmación de pago por WhatsApp enviada a Meta correctamente.",
+            "Se abrió WhatsApp con la confirmación. El pago quedó como Enviado.",
         });
         router.refresh();
-      } catch (error) {
-        const message =
-          error?.name === "AbortError"
-            ? "El envío tardó demasiado. Revisa el estado antes de volver a intentarlo."
-            : error instanceof Error
-              ? error.message
-              : "No se pudo enviar la confirmación por WhatsApp.";
-        setWhatsAppFeedback({ type: "error", message });
       } finally {
-        clearTimeout(timeout);
         sendingWhatsAppPaymentIdsRef.current.delete(paymentId);
         setSendingWhatsAppPaymentIds((current) => {
           const next = new Set(current);

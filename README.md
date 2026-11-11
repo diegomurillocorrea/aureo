@@ -18,33 +18,11 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## WhatsApp payment confirmations
 
-The payment confirmation action sends an approved Meta WhatsApp Cloud API template from
-the server; no access token is exposed to the browser. Add these server-only values to
-`.env.local` (the placeholders are in `.env.example`):
-
-```env
-WHATSAPP_ACCESS_TOKEN=
-WHATSAPP_PHONE_NUMBER_ID=548106841724229
-WHATSAPP_GRAPH_API_VERSION=v25.0
-WHATSAPP_TEMPLATE_NAME=daiego_payment_success
-WHATSAPP_TEMPLATE_LANGUAGE=es
-```
-
-Use the DAIEGO business phone (`+503 7528 7675`, Phone number ID `548106841724229`), not
-the Meta test number. Create and approve `daiego_payment_success` (Spanish / `es`) with
-body parameters in this order:
-
-1. `{{1}}` client full name
-2. `{{2}}` service name
-3. `{{3}}` service / account number
-4. `{{4}}` amount (without `$`; the template already includes `$`)
-5. `{{5}}` commission (without `$`)
-6. `{{6}}` total = amount + commission (without `$`)
-
-Apply the Supabase migrations before testing. In Payments, use the WhatsApp icon for a
-payment with status **Pagado** (or **Enviado** to resend), a stored voucher, and a
-client number stored as `503XXXXXXXX` (no leading `+`). A success message means Meta
-accepted the template for processing.
+In Payments, the WhatsApp icon opens a `wa.me` chat with the client number and a
+prefilled confirmation message. No Meta Cloud API tokens or templates are required.
+The payment needs status **Pagado** (or **Enviado** to reopen), a stored voucher, and
+a client number stored as `503XXXXXXXX` (no leading `+`). Opening the chat for a
+**Pagado** payment marks it as **Enviado**.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 

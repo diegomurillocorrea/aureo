@@ -5,9 +5,11 @@ import { revalidatePath } from "next/cache";
 import { requirePermission } from "@/lib/auth/permissions";
 import {
   PAYMENT_PROOF_BUCKET,
+  LEGACY_PAYMENT_STATUS_CANCELLED,
   normalizePaymentStatus,
   PAYMENT_STATUS_PAID,
   PAYMENT_STATUS_REGISTERED,
+  PAYMENT_STATUS_SENT,
 } from "./constants";
 
 const SEARCH_DEBOUNCE_MIN_LENGTH = 2;
@@ -330,6 +332,46 @@ export async function deletePaymentAction(id) {
 
   if (error) {
     return { error: error.message };
+  }
+
+  revalidatePath("/payments");
+  revalidatePath("/");
+  return { error: null };
+}
+
+/**
+ * Mark a payment as Enviado after staff opened the wa.me confirmation.
+ * Requires a stored voucher and Pagado (or legacy Cancelado treated as Pagado).
+ * @param {string} paymentId
+ * @returns {Promise<{ error: string | null }>}
+ */
+export async function markPaymentWhatsAppSent(paymentId) {
+  const auth = await requirePermission("payments", "view");
+  if (auth.error) return { error: auth.error };
+
+  if (!paymentId) {
+    return { error: "El ID del pago es requerido." };
+  }
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("payments")
+    .update({ status: PAYMENT_STATUS_SENT })
+    .eq("id", paymentId)
+    .not("proof_bucket", "is", null)
+    .not("proof_path", "is", null)
+    .in("status", [PAYMENT_STATUS_PAID, LEGACY_PAYMENT_STATUS_CANCELLED])
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return { error: error.message };
+  }
+  if (!data) {
+    return {
+      error:
+        "No se pudo marcar el pago como Enviado. Recarga e inténtalo de nuevo.",
+    };
   }
 
   revalidatePath("/payments");

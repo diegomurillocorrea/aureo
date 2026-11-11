@@ -2,7 +2,7 @@
  * Payment status assignment:
  * - Registrado (0): set automatically when the payment is logged/created without a voucher
  * - Pagado (1): set manually when the client has given the money, or when a voucher is uploaded
- * - Enviado (3): set when the WhatsApp payment confirmation was sent successfully
+ * - Enviado (3): set when staff opened the WhatsApp confirmation via wa.me
  */
 export const PAYMENT_STATUS_REGISTERED = 0;
 export const PAYMENT_STATUS_PAID = 1;
